@@ -2,12 +2,15 @@
 from messages_and_email import *
 from scraper_selenium import *
 
+link = 'https://www.subito.it/annunci-lombardia/affitto/appartamenti/milano/milano/?o='
+
 if __name__ == '__main__':
     while True:
         print("## started cycle - inside loop ##")
         ora = dt.datetime.now().time().hour
         minuti = dt.datetime.now().time().minute
-        scrapingFromUrl("");
+        #login()
+        scrapingFromUrl(link)
         sent_working_email()
         try:
             sent_working_email()
