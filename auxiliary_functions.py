@@ -1,6 +1,13 @@
 import datetime as dt
 from bs4 import BeautifulSoup
+import pandas as pd
+import openpyxl
 import requests,re,time
+from data_immobile import Data_immobile
+from datetime import datetime
+from openpyxl import Workbook
+
+
 
 def sistema_data_ora(caricato_il):
     if caricato_il == None:
@@ -33,76 +40,54 @@ def sistema_data_ora(caricato_il):
         data_con_orario = dt.datetime.combine(data, orario)
     return data_con_orario
 
-def details_grid(link_page_inside:str):
-    tmp_source = requests.get(link_page_inside).text
-    tmp_soup = BeautifulSoup(tmp_source, "lxml")
-    tmp_detail = tmp_soup.find("p",
-                               "classes_sbt-text-atom__2GBat classes_token-body__1dLNW size-normal classes_weight-book__3zPi1 jsx-3711062521 description classes_preserve-new-lines__1X-M6").text
-    grid_detail = tmp_soup.find_all("span",
-                                    class_="classes_sbt-text-atom__2GBat classes_token-body__1dLNW size-normal classes_weight-book__3zPi1 value jsx-3561725324")
-    tipo = ["benzina", "diesel", "gpl", "metano", "ibrida", "elettrica"]
-    check_version = []
-    version = tmp_soup.find_all("span",
-                                class_="classes_sbt-text-atom__2GBat classes_token-body__1dLNW size-normal classes_weight-book__3zPi1 label jsx-3561725324")
-    for iel in range(0, 3):
-        check_version.append(version[iel].text)
-    marca, modello, versione, km, immatricolazione, carburante, euro = None, None, None, None, None, None, None
-    i = 0
-    for raw in grid_detail:
-        if i == 0:
-            marca = raw.text.strip().upper()
-            i += 1
-        elif i == 1:
-            modello = raw.text.strip().lower()
-            i += 1
-        elif i == 2 and "Versione" in check_version:
-            versione = raw.text.strip().lower()
-            i += 1
-        else:
-            raw_text = raw.text
-            if "Km" in raw_text and raw_text != "Km0":
-                if raw_text.split(" ")[0] == "Km":
-                    pass
-                else:
-                    km = int(raw_text.split(" ")[0])
-            if "/" in raw_text and raw_text.split("/")[0].isdigit():
-                mese = int(raw_text.split("/")[0])
-                anno = int(raw_text.split("/")[1])
-                if anno > 1900:
-                    immatricolazione = dt.date(anno, mese, 1)
-            if raw_text.strip().lower() in tipo:
-                carburante = raw_text.strip().lower()
-            if "Euro" in raw_text or "euro" in raw_text:
-                if len(raw_text.split(" ")) != 1:
-                    euro = int(raw_text.split(" ")[1])
-            for word in tmp_detail.split():
-                word = word.lower()
-                if "incidente" == word or "incidentata" == word or "incidentato" == word:
-                    return (None, None, None, None, None, None, None)
-            if euro == None:
-                try:
-                    second_tmp = tmp_soup.find_all("p", class_= "classes_sbt-text-atom__2GBat classes_token-body__1dLNW size-normal classes_weight-book__3zPi1")
-                    for row in second_tmp:
-                        txt = row.text.replace(" ", "")
-                        check = re.search("Euro*", txt)
-                        if check != None:
-                            if txt[check.span()[0]+4].isdigit():
-                                euro = int(txt[check.span()[0]+4])
-                except:
-                    euro = None
-    return (marca, modello, versione, km, immatricolazione, carburante, euro)
+
+def writeExcelByDf(df):
+    now = datetime.now()
+    date_time_print = now.strftime("%m_%d_%Y_%H-%M-%S")
+    name_report = 'Report_'+date_time_print+'.xlsx'
+    path = 'C:/Users/lucai/PycharmProjects/New folder/subitoBot/reports/'
+    df = pd.DataFrame(column=[title,number,name,price,space, rooms, floor, description,url_list])
+    with pd.ExcelWriter(path) as writer:
+        writer.book = openpyxl.load_workbook(path)
+        df.to_excel(writer, sheet_name='report')
+        df.to_excel(name_report, index=False, header=True)
+
+
+def writeExcelByDataImmobile(dataImmobile):
+    now = datetime.now()
+    date_time_print = now.strftime("%m_%d_%Y_%H-%M-%S")
+    name_report = 'Report_' + date_time_print + '.xlsx'
+    wb = Workbook() #workBook
+    ws = wb.active #workSheet
+    ws.title(date_time_print)
+    ws = wb[name_report]
+    index = 0
+
+    headers = ['name','price','space','rooms','floor','description','title','url','number']
+    header = {'name':'name','price':'price','space':'space','rooms':'rooms','floor':'floor','description':'description','title':'title','url':'url','number':'number'}
+    for row in ws.iter_rows(min_row=1, max_col=len(headers), max_row=dataImmobile.name.length):
+        for cell in row:
+            ws(header[index])
+            ++index
+        print(cell)
+
+    # for col in ws.iter_cols(min_row=2, max_col=len(headers), max_row=dataImmobile.name.length):
+    #     for cell in col:
+    #
+
+
 
 def excel_date(df):
     new_date_up = []
     new_imm = []
     for iel in range(len(df)):
-        if df.loc[iel]["Immatricolazione"] != None:
-            new_imm.append(df.loc[iel]["Immatricolazione"].strftime("%x %X"))
+        if df.loc[iel]["rooms"] != None:
+            new_imm.append(df.loc[iel]["rooms"].strftime("%x %X"))
         else:
             new_imm.append(None)
         new_date_up.append(df.loc[iel]["Data_upload"].strftime("%x %X"))
     df["Data_upload"] = new_date_up
-    df["Immatricolazione"] = new_imm
+    df["rooms"] = new_imm
     return df
 
 

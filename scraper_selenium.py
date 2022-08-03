@@ -3,14 +3,17 @@
 # - @lucaimbalzano
 
 import time
-
+from data_immobile import Data_immobile
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
+import pandas as pd
 
 browser = webdriver.Chrome('C:/Users/lucai/Documents/Utils/SW/WebDriver/103/chromedriver.exe')
 browser.get('https://areariservata.subito.it/login_form?login_tooltip=true')
 filter_privato = '&advt=0'
+linkForNewTab = ''
+name,price,space, rooms, floor, description, title, url_list, number =[],[],[],[],[],[],[],[],[]
 
 def login():
     time.sleep(4)
@@ -31,7 +34,6 @@ def login():
 
 
 def scrapingFromUrl(url):
-
     browser.get(url+str(0)+filter_privato)
     #DACANCELLARE
     time.sleep(4)
@@ -41,13 +43,17 @@ def scrapingFromUrl(url):
 
     pagination = browser.find_elements(By.CLASS_NAME, "index-module_button-text__VZcja")
     lastPage = pagination[len(pagination) - 2].text
-    time.sleep(5)
+    # DACANCELLARE
+    lastPage = 3
+    time.sleep(3)
     for index in range(1, int(lastPage)):
         link_page = url + str(index) + filter_privato
-        print("## retrieving data from first page")
+        print("## retrieving data from "+str(index)+" page")
         all_links_cards = browser.find_elements(By.CLASS_NAME, "BigCard-module_link__kVqPE")
         linkForNewTab = all_links_cards[index].get_attribute('href')
         scrapeFromNewTab(linkForNewTab)
+
+    return Data_immobile(name,price,space, rooms, floor, description, title, url, number)
 
 
 def scrapeFromNewTab(url):
@@ -55,23 +61,36 @@ def scrapeFromNewTab(url):
     browser.execute_script('window.open("' + url + '");')
     browser.switch_to.window(browser.window_handles[1])
     time.sleep(1)
-    title = browser.find_element(By.CLASS_NAME, "AdInfo_ad-info__title__7jXnY")
-    price = browser.find_element(By.CLASS_NAME, "index-module_large__SUacX").text
-    name = browser.find_element(By.CLASS_NAME, "index-module_name__hRS5a").text
+    title_scraped = browser.find_element(By.CLASS_NAME, "AdInfo_ad-info__title__7jXnY").text
+    price_scraped = browser.find_element(By.CLASS_NAME, "index-module_large__SUacX").text
+    name_scraped = browser.find_element(By.CLASS_NAME, "index-module_name__hRS5a").text
     space_rooms_floor = browser.find_elements(By.CLASS_NAME, "MainData_label__4od4v")
-    space = space_rooms_floor[0].text
-    rooms = space_rooms_floor[1].text
-    floor = space_rooms_floor[2].text
-    description = browser.find_element(By.CLASS_NAME, "index-module_preserve-new-lines__ZOcGy").text
+    space_scraped = space_rooms_floor[0].text
+    rooms_scraped = space_rooms_floor[1].text
+    floor_scraped = space_rooms_floor[2].text
+    description_scraped = browser.find_element(By.CLASS_NAME, "index-module_preserve-new-lines__ZOcGy").text
+    number_scraped = '';
 
     try:
         all_buttons_new_tab = browser.find_elements(By.CLASS_NAME, "index-module_icon-only__gkRU8")
         chiama_btn = [btn for btn in all_buttons_new_tab if btn.text == "Chiama"]
         if len(chiama_btn) > 0:
             chiama_btn[0].click()
+            number_scraped = '';
     except NoSuchElementException:
         print('--- Error occurred, no number for: '+title+'; URL: '+url)
         pass
+
+    name.append(name_scraped)
+    price.append(price_scraped)
+    space.append(space_scraped)
+    rooms.append(rooms_scraped)
+    floor.append(floor_scraped)
+    description.append(description_scraped)
+    title.append(title_scraped)
+    url_list.append(linkForNewTab)
+    number.append(number_scraped)
+
     browser.close()
     time.sleep(1)
     browser.switch_to.window(pin_tab)
