@@ -1,5 +1,6 @@
 # coding=utf-8
 import json
+import traceback
 
 from messages_and_email import *
 from scraper_selenium import *
@@ -8,15 +9,26 @@ import pandas as pd
 
 link = 'https://www.subito.it/annunci-lombardia/affitto/appartamenti/milano/milano/?o='
 
+def getDataImmobile(link):
+    data_immobile = scrapingFromUrl(link)
+    return data_immobile
+
 if __name__ == '__main__':
 
     while True:
         print("## started cycle - inside loop ##")
         ora = dt.datetime.now().time().hour
         minuti = dt.datetime.now().time().minute
-        #login()
-        data_immobile = scrapingFromUrl(link)
+        login()
+        try:
+           data_immobile = scrapingFromUrl(link)
+        except Exception :
+            traceback.print_exc()
+
         writeExcelByDataImmobile(data_immobile)
+        print("## finished cycle - exit ##")
+        exit(1)
+
 
         # sent_working_email()
         # try:

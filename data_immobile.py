@@ -16,5 +16,19 @@ class Data_immobile:
   def __setattr__(self, name: str, value: Any) -> None:
     super().__setattr__(name, value)
 
+  def print(self):
+        print("= OBJECT =")
+        print("name: ", self.name)
+        print("price: ", self.price)
+        print("space: ", self.space)
+        print("rooms: ", self.rooms)
+        print("floor: ", self.floor)
+        print("desc: ", self.description)
+        print("title: ", self.title)
+        print("url: ", self.url)
+        print("number: ", self.number)
+        print(" ")
+
+
 
 
