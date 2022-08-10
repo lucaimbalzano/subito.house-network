@@ -1,9 +1,11 @@
 # coding=utf-8
-import json
-import traceback
 
 from messages_and_email import *
 from scraper_selenium import *
+from cronometer import ChronoMeter
+import json
+import traceback
+import time
 import pandas as pd
 
 
@@ -14,20 +16,27 @@ def getDataImmobile(link):
     return data_immobile
 
 if __name__ == '__main__':
+    chrono = ChronoMeter()
+    chrono.start_chrono()
 
     while True:
-        print("## started cycle - inside loop ##")
-        ora = dt.datetime.now().time().hour
-        minuti = dt.datetime.now().time().minute
-        login()
-        try:
-           data_immobile = scrapingFromUrl(link)
-        except Exception :
-            traceback.print_exc()
-
-        writeExcelByDataImmobile(data_immobile)
+        for i in (1, 10):
+            print("## started cycle - inside loop ##")
+            ora = dt.datetime.now().time().hour
+            minuti = dt.datetime.now().time().minute
+            login()
+            try:
+                data_immobile = scrapingFromUrl(link)
+                if(data_immobile != None):
+                    writeExcelByDataImmobile(data_immobile)
+                else:
+                    print("Error Occurred: No data retrived")
+            except Exception:
+                traceback.print_exc()
+        chrono.stop_chrono()
+        chrono.print_time()
         print("## finished cycle - exit ##")
-        exit(1)
+    exit(1)
 
 
         # sent_working_email()
