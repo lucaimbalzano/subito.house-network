@@ -9,6 +9,12 @@ $ cd subito.house-network
 ```
 
 create virtual environment
+
+```
+$ python3 -m venv env
+$ .\env\Scripts\activate 
+```
+or 
 ```
 (if you haven't pipenv)
 $ pipenv --python 3.10 install --dev
@@ -16,9 +22,11 @@ then:
 $ pipenv shell
 ```
 
+
 install all dependencies:
 ```
-$ pip install requirements.txt
+$ pip install wheel
+$ pip install -r requirements.txt
 ```
 
 

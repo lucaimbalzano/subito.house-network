@@ -1,6 +1,6 @@
 import datetime as dt
 from bs4 import BeautifulSoup
-import pandas as pd
+# import pandas as pd
 import openpyxl
 import requests,re,time
 from data_immobile import Data_immobile

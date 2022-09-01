@@ -3,10 +3,12 @@
 from messages_and_email import *
 from scraper_selenium import *
 from cronometer import ChronoMeter
+from auxiliary_functions import *
 import json
 import traceback
+import datetime as dt
 import time
-import pandas as pd
+# import pandas as pd
 
 
 link = 'https://www.subito.it/annunci-lombardia/affitto/appartamenti/milano/milano/?o='

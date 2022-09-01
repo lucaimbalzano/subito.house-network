@@ -41,7 +41,7 @@ def scrapingFromUrl(urlFromMain):
     time.sleep(1)
     pagination = browser.find_elements(By.CLASS_NAME, "index-module_button-text__VZcja")
     lastPage = pagination[len(pagination) - 2].text
-
+    lastPage = 5 #TODO delete
     for index in range(1, int(lastPage)):
         link_page = urlFromMain + str(index) + filter_privato
         browser.get(link_page)
