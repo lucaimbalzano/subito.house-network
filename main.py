@@ -1,17 +1,17 @@
 # coding=utf-8
 
-from messages_and_email import *
-from scraper_selenium import *
-from cronometer import ChronoMeter
-from auxiliary_functions import *
+from email import *
+from scraper.scraper_selenium import *
+from utils.auxiliary_functions_excel import writeExcelByDataImmobile
+from utils.cronometer import ChronoMeter
+from utils.auxiliary_functions import *
+from settings import settings
 import json
 import traceback
 import datetime as dt
 import time
 # import pandas as pd
 
-
-link = 'https://www.subito.it/annunci-lombardia/affitto/appartamenti/milano/milano/?o='
 
 def getDataImmobile(link):
     data_immobile = scrapingFromUrl(link)
@@ -24,11 +24,9 @@ if __name__ == '__main__':
     while True:
         for i in (1, 10):
             print("## started cycle - inside loop ##")
-            ora = dt.datetime.now().time().hour
-            minuti = dt.datetime.now().time().minute
             login()
             try:
-                data_immobile = scrapingFromUrl(link)
+                data_immobile = scrapingFromUrl(settings.BASE_LINK_RENT_HOUSE)
                 if(data_immobile != None):
                     writeExcelByDataImmobile(data_immobile)
                 else:

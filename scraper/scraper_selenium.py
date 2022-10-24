@@ -12,7 +12,7 @@ from selenium.webdriver.common.by import By
 
 options = webdriver.ChromeOptions()
 options.add_argument("--incognito");
-browser = webdriver.Chrome('C:/Users/lucai/Documents/Utils/SW/WebDriver/104/5112/79/chromedriver.exe', chrome_options=options)
+browser = webdriver.Chrome('C:/Users/lucai/Documents/Utils/SW/WebDriver/106/0.5249.61/chromedriver.exe', chrome_options=options)
 browser.get('https://areariservata.subito.it/annunci?login_tooltip=true')
 filter_privato = '&advt=0'
 linkForNewTab = ''
