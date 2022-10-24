@@ -1,27 +1,9 @@
-
-
-
-
-
-
-
 import datetime
-
 from openpyxl import Workbook
 
 
-def writeExcelByDf(df):
-        now = datetime.now()
-        # date_time_print = now.strftime("%m_%d_%Y_%H-%M-%S")
-        # name_report = 'Report_'+date_time_print+'.xlsx'
-        # path = 'C:/Users/lucai/PycharmProjects/New folder/subitoBot/reports/'
-        # df = pd.DataFrame(column=[title,number,name,price,space, rooms, floor, description,url_list])
-        # with pd.ExcelWriter(path) as writer:
-        #     writer.book = openpyxl.load_workbook(path)
-        #     df.to_excel(writer, sheet_name='report')
-        #     df.to_excel(name_report, index=False, header=True)
 
-
+# TODO da rifare perche cambiato sistema
 def writeExcelByDataImmobile(dataImmobile):
     now = datetime.now()
     date_time_print = now.strftime("%m_%d_%Y_%H-%M-%S")

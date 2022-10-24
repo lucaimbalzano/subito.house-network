@@ -1,6 +1,8 @@
 # coding=utf-8
 
 from email import *
+from browser.browser import Browser
+from messages import send_message_by_data_house
 from scraper.scraper_selenium import *
 from utils.auxiliary_functions_excel import writeExcelByDataImmobile
 from utils.cronometer import ChronoMeter
@@ -21,21 +23,24 @@ if __name__ == '__main__':
     chrono = ChronoMeter()
     chrono.start_chrono()
 
-    while True:
-        for i in (1, 10):
-            print("## started cycle - inside loop ##")
-            login()
-            try:
-                data_immobile = scrapingFromUrl(settings.BASE_LINK_RENT_HOUSE)
-                if(data_immobile != None):
-                    writeExcelByDataImmobile(data_immobile)
-                else:
-                    print("Error Occurred: No data retrived")
-            except Exception:
-                traceback.print_exc()
-        chrono.stop_chrono()
-        chrono.print_time()
-        print("## finished cycle - exit ##")
+    # while True:
+    browser = Browser.get_browser()
+    login(browser)
+    try:
+        data_immobile_pages = scrollByPage(browser)
+        # url_list = ['url_test', 'XY']  
+        # data_immobile = Data_immobile("name","100","4", "4", "4", "description", "title", url_list , "348 604 9869")
+        if data_immobile_pages is not None:
+            # writeExcelByDataImmobile(data_immobile)
+            # write on DB send_message(data_immobile)
+            send_message_by_data_house.send_message(data_immobile_pages)
+        else:
+            print("Error Occurred: No data retrived")
+            quit()
+    except Exception:
+        traceback.print_exc()
+    chrono.stop_chrono()
+    chrono.print_time()
     exit(1)
 
 

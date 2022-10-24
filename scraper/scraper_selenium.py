@@ -6,22 +6,22 @@ import time
 import traceback
 
 from data_immobile import Data_immobile
-from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
+from settings import settings
 
-options = webdriver.ChromeOptions()
-options.add_argument("--incognito");
-browser = webdriver.Chrome('C:/Users/lucai/Documents/Utils/SW/WebDriver/106/0.5249.61/chromedriver.exe', chrome_options=options)
-browser.get('https://areariservata.subito.it/annunci?login_tooltip=true')
-filter_privato = '&advt=0'
+
+
+
+
 linkForNewTab = ''
 linksNotFound = []
 numberNotFound = []
-name,price,space, rooms, floor, description, title, url_list, number, bath, upload_time =[],[],[],[],[],[],[],[],[], [], []
+nameList,priceList,spaceList, roomsList, floorList, descriptionList, titleList, urlHouseDetailList, numberList, bathList, upload_timeList =[],[],[],[],[],[],[],[],[], [], []
 
 
-def login():
+def login(browser):
+    browser.get(settings.LOGIN_SECTION_SUBITO)
     time.sleep(4)
     privacy_alert = browser.find_element(By.ID, 'didomi-notice-agree-button')
     if privacy_alert != None:
@@ -29,41 +29,56 @@ def login():
 
     username = browser.find_element("xpath","//input[@name='username']")
     password = browser.find_element("xpath","//input[@name='password']")
-    username.send_keys('lucaimbalzano@gmail.com')
-    password.send_keys('Slowspoke00')
+    username.send_keys(settings.LOGIN_USERNAME)
+    password.send_keys(settings.LOGIN_PASSWORD)
     time.sleep(2)
     submit = browser.find_element("xpath","//button[@type='submit']").click()
     time.sleep(4)
 
-def scrapingFromUrl(urlFromMain):
 
-    browser.get(urlFromMain+str(1)+filter_privato)
+def getUrlHousesListPage(number_page):
+    return settings.BASE_LINK_RENT_HOUSE + str(number_page) + settings.TIPOLOGY_ADVERTISER_FILTER
+
+
+def scrollByPage(browser):
+    browser.get(settings.BASE_LINK_RENT_HOUSE+str(1)+settings.TIPOLOGY_ADVERTISER_FILTER)
     time.sleep(1)
-    pagination = browser.find_elements(By.CLASS_NAME, "index-module_button-text__VZcja")
-    lastPage = pagination[len(pagination) - 2].text
-    lastPage = 5 #TODO delete
+    # TODO CHANGE
+    lastPage = 100
+    data_immobile_pages = []
+    
     for index in range(1, int(lastPage)):
-        link_page = urlFromMain + str(index) + filter_privato
-        browser.get(link_page)
-        print("## retrieving data from "+str(index)+" page")
+        print("[DEBUG] retrieving data from "+str(index)+" page")
+        data_immobile_pages.append(scrapingFromUrl(browser, index))
+    return data_immobile_pages
 
-        all_links_cards = browser.find_elements(By.CLASS_NAME, "BigCard-module_link__kVqPE")
+def scrapingFromUrl(browser, index):
+    browser.get(getUrlHousesListPage(index))
+    all_links_cards = browser.find_elements(By.CLASS_NAME, "BigCard-module_link__kVqPE")
+    if all_links_cards is None:
+        return Data_immobile(nameList,priceList,spaceList, roomsList, floorList, descriptionList, titleList, urlHouseDetailList, numberList)
+
+    try:
         for index_cards in range(1, len(all_links_cards)):
-            print("## retrieving data from card " + str(index_cards))
-            linkForNewTab = all_links_cards[index_cards].get_attribute('href')
-            url_list.append(linkForNewTab)
-            try:
-                scrapeFromNewTab(linkForNewTab)
-            except NoSuchElementException:
-                traceback.print_exc()
-                linksNotFound.append(linkForNewTab)
-                pass
-    return Data_immobile(name,price,space, rooms, floor, description, title, url_list, number)
+            print("[DEBUG] retrieving data from card " + str(index_cards))
+            urlHouseDetail = all_links_cards[index_cards].get_attribute('href')
+            urlHouseDetailList.append(urlHouseDetail)
+            scrapeHouseDetailFromNewTab(browser, urlHouseDetail)
 
-def scrapeFromNewTab(url):
-    pin_tab = browser.window_handles[0]
+    except NoSuchElementException:
+        traceback.print_exc()
+        linksNotFound.append(linkForNewTab)
+    finally:
+            return Data_immobile(nameList,priceList,spaceList, roomsList, floorList, descriptionList, titleList, urlHouseDetailList, numberList)
+
+def openAndSaveNetTabPosition(browser, url):
+    tab_saved = browser.window_handles[0]
     browser.execute_script('window.open("' + url + '");')
     browser.switch_to.window(browser.window_handles[1])
+    return tab_saved
+
+def scrapeHouseDetailFromNewTab(browser, url):
+    pin_tab = openAndSaveNetTabPosition(browser, url)
 
     number_scraped = ''
     title_scraped = browser.find_element(By.CLASS_NAME, "AdInfo_ad-info__title__7jXnY").text
@@ -75,6 +90,7 @@ def scrapeFromNewTab(url):
     floor_scraped = ''
     rooms_scraped = ''
     space_scraped = ''
+    bath_scraped = ''
     # space_scraped = space_rooms_floor[0].text
 
     for index_details in range(1, len(space_rooms_floor)):
@@ -104,18 +120,19 @@ def scrapeFromNewTab(url):
                 numberNotFound.append(linkForNewTab)
 
     except NoSuchElementException:
-        print('--- Error occurred, no number for: '+str(title)+'; URL: '+str(url))
+        print('--- Error occurred, no number for: '+str(title_scraped)+'; URL: '+str(url))
         pass
-
-    name.append(name_scraped)
-    price.append(price_scraped)
-    space.append(space_scraped)
-    rooms.append(rooms_scraped)
-    floor.append(floor_scraped)
-    description.append(description_scraped)
-    title.append(title_scraped)
-    number.append(number_scraped)
-    bath.append(bath_scraped)
+    # TODO DELETE
+    if number_scraped:
+        nameList.append(name_scraped)
+        priceList.append(price_scraped)
+        spaceList.append(space_scraped)
+        roomsList.append(rooms_scraped)
+        floorList.append(floor_scraped)
+        descriptionList.append(description_scraped)
+        titleList.append(title_scraped)
+        numberList.append(number_scraped)
+        bathList.append(bath_scraped)
 
     browser.close()
     browser.switch_to.window(pin_tab)

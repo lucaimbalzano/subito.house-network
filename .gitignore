@@ -6,6 +6,10 @@ __pycache__/
 # C extensions
 *.so
 
+# pywhatkit
+.PyWhatKit_DB.txt
+
+
 # Distribution / packaging
 .Python
 build/
