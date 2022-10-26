@@ -3,16 +3,18 @@
 from email import *
 from browser.browser import Browser
 from messages import send_message_by_data_house
+from response.res_api_subito_message_get_all import HousesListDTO, HousesListDTODecoder
 from scraper.scraper_selenium import *
 from utils.auxiliary_functions_excel import writeExcelByDataImmobile
 from utils.cronometer import ChronoMeter
+from request.req_api_subito_message import get_api_subito, get_api_subito_all_houses, get_api_subito_check, post_api_subito
 from utils.auxiliary_functions import *
 from settings import settings
 import json
 import traceback
 import datetime as dt
 import time
-# import pandas as pd
+
 
 
 def getDataImmobile(link):
@@ -23,37 +25,26 @@ if __name__ == '__main__':
     chrono = ChronoMeter()
     chrono.start_chrono()
 
-    # while True:
     browser = Browser.get_browser()
     login(browser)
     try:
-        data_immobile_pages = scrollByPage(browser)
-        # url_list = ['url_test', 'XY']  
-        # data_immobile = Data_immobile("name","100","4", "4", "4", "description", "title", url_list , "348 604 9869")
+        
+        data_immobile_pages = scrollByPage(browser, 20, 0)
+        # data_immobile_pages =  Data_immobile(['name'], ['223'], ['85'], ['3'], ['2'], ['description'], ['title_01'], ['url'], ['3345679876'],[False], ['RENT']);
         if data_immobile_pages is not None:
-            # writeExcelByDataImmobile(data_immobile)
-            # write on DB send_message(data_immobile)
+            # write on excel
+            post_api_subito(data_immobile_pages)
             send_message_by_data_house.send_message(data_immobile_pages)
         else:
-            print("Error Occurred: No data retrived")
-            quit()
-    except Exception:
+           print("[STACKTRACE] Error __main__:data_immobile_pages  - is None")
+           quit()
+    except Exception as e:
         traceback.print_exc()
+        print('[STACKTRACE] __main__: '+str(e))
+
+
+
     chrono.stop_chrono()
     chrono.print_time()
     exit(1)
 
-
-        # sent_working_email()
-        # try:
-        #     sent_working_email()
-        # except Exception as e:
-        #     print(e)
-        #     # send_wrong_email()
-        # todayMinSec = dt.datetime.today()
-        # tomorrow = todayMinSec + dt.timedelta(days=1)
-        # tomorrowMinSec = tomorrow.combine(tomorrow, dt.time(20, 45))
-        # differenceTodayTomorrow = tomorrowMinSec - dt.datetime.today()
-        # totalSecondsDifferenceTodayTomorrow = differenceTodayTomorrow.total_seconds()
-        # print("difference to understand::::", dt.datetime.today() + dt.timedelta(seconds=totalSecondsDifferenceTodayTomorrow))
-        # time.sleep(totalSecondsDifferenceTodayTomorrow)

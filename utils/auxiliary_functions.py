@@ -46,6 +46,8 @@ def starting_time(hour, minute):
         today = dt.datetime.today()
         domani = today + dt.timedelta(days=1)
         ora = dt.time(hour, minute)
+
+        
         until = domani.combine(domani, ora)
         diff = until - dt.datetime.today()
         secnd = diff.total_seconds()

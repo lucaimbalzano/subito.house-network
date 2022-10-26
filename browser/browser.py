@@ -17,3 +17,5 @@ class Browser:
         options = get_options()
         browser = webdriver.Chrome(settings.PATH_CHROME_DRIVER, chrome_options=options)
         return browser
+
+        

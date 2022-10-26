@@ -51,3 +51,5 @@ class ChronoMeter():
 
     def current_milli_time(self):
         return round(time.time() * 1000)
+
+        

@@ -24,6 +24,8 @@ def writeExcelByDataImmobile(dataImmobile):
     for row_counter in range(1, len(dataImmobile.name)+1, 1):
         for count in range(0,len(headers),1):
             if (headers.index('name') == count):
+
+                
                 temp_name = dataImmobile.name[counters[0]]
                 ws.cell(row=row_counter + 1, column=count + 1).value = temp_name
                 counters[0] += 1
