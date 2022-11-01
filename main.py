@@ -29,7 +29,7 @@ if __name__ == '__main__':
     login(browser)
     try:
         
-        data_immobile_pages = scrollByPage(browser, 20, 0)
+        data_immobile_pages = scrollByPage(browser, 3, 0)
         # data_immobile_pages =  Data_immobile(['name'], ['223'], ['85'], ['3'], ['2'], ['description'], ['title_01'], ['url'], ['3345679876'],[False], ['RENT']);
         if data_immobile_pages is not None:
             # write on excel
@@ -41,6 +41,7 @@ if __name__ == '__main__':
     except Exception as e:
         traceback.print_exc()
         print('[STACKTRACE] __main__: '+str(e))
+        pass
 
 
 
