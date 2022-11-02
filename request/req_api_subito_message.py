@@ -7,9 +7,12 @@ from data_immobile import Data_immobile
 from request.dto.house_request_dto import HouseRequestDTO, HouseRequestDTOEncoder
 
 
-def print_response(response,status_code, request_type):
+def print_response(response,status_code, request_type, url_house, number):
     print('[DEBUG] '+request_type+'::HTTP-RESPONSE: ')
     print('STATUS CODE: '+status_code)
+    if number != 0:
+        print('NUMBER: '+number)
+    print('URL HOUSE: '+url_house)
     print('BODY REPOSNE: '+str(json.dumps(response,indent=4)))
 
 def print_responsetext(response,status_code, request_type):
@@ -28,7 +31,8 @@ def post_api_subito(house_dto):
     except Exception as e:
         print('[STACKTRACE] POST::REQ_API_SUBITO_MESSAGE: ' + str(e))
 
-    print_response(response.json(), str(response.status_code), 'POST')
+    print_response(response.json(), str(response.status_code), 'POST', house_dto.url, house_dto.number)
+    return response
     
 
 def get_api_subito(id_house):

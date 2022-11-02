@@ -29,12 +29,10 @@ if __name__ == '__main__':
     login(browser)
     try:
         
-        data_immobile_pages = scrollByPage(browser, 2, 0)
-        # data_immobile_pages =  Data_immobile(['name'], ['223'], ['85'], ['3'], ['2'], ['description'], ['title_01'], ['url'], ['3345679876'],[False], ['RENT']);
-        if data_immobile_pages is not None:
+        houseListByPage = scrollByPage(browser, 2, 0)
+        if houseListByPage is not None:
             # write on excel
-            
-            send_message_by_data_house.send_message(data_immobile_pages)
+            send_message_by_data_house.send_message(houseListByPage)
         else:
            print("[STACKTRACE] Error __main__:data_immobile_pages  - is None")
            quit()
@@ -47,5 +45,7 @@ if __name__ == '__main__':
 
     chrono.stop_chrono()
     chrono.print_time()
+
+
     exit(1)
 

@@ -19,6 +19,10 @@ numberNotFound = []
 house = None;
 houseListByPage = []
 
+
+
+
+
 def login(browser):
     browser.get(settings.LOGIN_SECTION_SUBITO)
     time.sleep(4)
@@ -38,6 +42,31 @@ def login(browser):
 def getUrlHousesListPage(number_page):
     return settings.BASE_LINK_RENT_HOUSE + str(number_page) + settings.TIPOLOGY_ADVERTISER_FILTER
 
+def getIfNOTSPECIFIEDfield(field_retived):
+    return field_retived if field_retived != '' else 'NOT SPECIFIED'
+
+def getVetrinaByCard(all_links_cards, index_cards):
+    if all_links_cards[index_cards].accessible_name.find('VETRINA') != -1:
+        print('[DEBUG] VETRINA house, url: ' + str(all_links_cards[index_cards].get_attribute('href')))
+        return True
+    else:
+        return False
+
+
+def openAndSaveNetTabPosition(browser, url):
+    tab_saved = browser.window_handles[0]
+    browser.execute_script('window.open("' + url + '");')
+    browser.switch_to.window(browser.window_handles[1])
+    return tab_saved
+
+
+
+
+
+
+
+
+
 
 def scrollByPage(browser, num_pages_to_scroll, index_start_num_cards_to_scroll):
     browser.get(settings.BASE_LINK_RENT_HOUSE + str(1) + settings.TIPOLOGY_ADVERTISER_FILTER)
@@ -52,12 +81,7 @@ def scrollByPage(browser, num_pages_to_scroll, index_start_num_cards_to_scroll):
             
     return houseListByPage
 
-def getVetrinaByCard(all_links_cards, index_cards):
-    if all_links_cards[index_cards].accessible_name.find('VETRINA') != -1:
-        print('[DEBUG] VETRINA house, url: ' + str(all_links_cards[index_cards].get_attribute('href')))
-        return True
-    else:
-        return False
+
 
 def scrapingFromUrl(browser, index_page, index_start_num_cards, houseList):
     browser.get(getUrlHousesListPage(index_page))
@@ -87,12 +111,6 @@ def scrapingFromUrl(browser, index_page, index_start_num_cards, houseList):
         return houseListByPage
 
 
-def openAndSaveNetTabPosition(browser, url):
-    tab_saved = browser.window_handles[0]
-    browser.execute_script('window.open("' + url + '");')
-    browser.switch_to.window(browser.window_handles[1])
-    return tab_saved
-
 def getFeaturesHouse(browser,
                             house_features,
                             name_scraped,
@@ -103,16 +121,32 @@ def getFeaturesHouse(browser,
                             number_scraped,
                             vetrina_field,
                             advertising_field):
+    
     energyHeating_scraped = 'NOT SPECIFIED'
     energyClass_scraped = 'NOT SPECIFIED'
 
-    # TODO check if  house_features[N] is the proper position
-    space_scraped = house_features[0].text.split('\n')[1] if house_features[0].text.split('\n')[1] != '-' else 'NOT SPECIFIED'
-    floor_scraped = house_features[2].text.split('\n')[1] if house_features[2].text.split('\n')[1] != '-' else 'NOT SPECIFIED'
-    rooms_scraped = house_features[1].text.split('\n')[1] if house_features[1].text.split('\n')[1] != '-' else 'NOT SPECIFIED'
-    bathroom_scraped = house_features[3].text.split('\n')[1] if house_features[3].text.split('\n')[1] != '-' else 'NOT SPECIFIED'
-    # status_house_scraped =  house_features[4].text.split('\n')[1] if house_features[4].text.split('\n')[1] != '-' else 'NOT SPECIFIED'
-    parking_scraped = house_features[5].text.split('\n')[1] if house_features[5].text.split('\n')[1] != '-' else 'NOT SPECIFIED'
+    space_scraped = ''
+    floor_scraped = ''
+    rooms_scraped = ''
+    bathroom_scraped = ''
+    parking_scraped = ''
+    status_house_scraped = ''
+
+    for index_field in range(0, len(house_features)):
+        field = house_features[index_field].text.split('\n')   
+        if field[0] == 'Stato':
+            status_house_scraped =  field[1] if field[1] != '-' else 'NOT SPECIFIED'
+        if field[0] == 'Superficie':
+            space_scraped =  field[1] if field[1] != '-' else 'NOT SPECIFIED'
+        if field[0] == 'Piano':
+            floor_scraped =  field[1] if field[1] != '-' else 'NOT SPECIFIED'
+        if field[0] == 'Locali':
+            rooms_scraped =  field[1] if field[1] != '-' else 'NOT SPECIFIED'
+        if field[0] == 'Bagni':
+            bathroom_scraped =  field[1] if field[1] != '-' else 'NOT SPECIFIED'
+        if field[0] == 'Parcheggio':
+            parking_scraped =  field[1] if field[1] != '-' else 'NOT SPECIFIED'
+
 
     try:
         energy_features = browser.find_element(By.CLASS_NAME, "feature-list_list__UNF-4c").text.split('\n')
@@ -126,6 +160,7 @@ def getFeaturesHouse(browser,
         # elevator = browser.find_element(By.ID, 'feature-list-section_detail-chip-container__by96k').text.find('Asce') 
         urlProfile_scraped = browser.find_element(By.CLASS_NAME, "index-module_rounded_user_badge__KC3zi").get_attribute('href')
         urlProfile_scraped_clean = urlProfile_scraped if urlProfile_scraped != '-' else 'NOT SPECIFIED'
+
         return HouseRequestDTO(name_scraped, 
                             price_scraped, 
                             space_scraped, 
@@ -168,10 +203,19 @@ def scrapeHouseDetailFromNewTab(browser, url, vetrina_field, advertising_field, 
     pin_tab = openAndSaveNetTabPosition(browser, url)
     try:
         number_scraped = getNumber(browser)
+
         title_scraped = browser.find_element(By.CLASS_NAME, "AdInfo_ad-info__title__7jXnY").text
+        title_scraped = getIfNOTSPECIFIEDfield(title_scraped)
+
         price_scraped = browser.find_element(By.CLASS_NAME, "index-module_large__SUacX").text
+        price_scraped = getIfNOTSPECIFIEDfield(price_scraped)
+
         name_scraped = browser.find_element(By.CLASS_NAME, "index-module_name__hRS5a").text
+        name_scraped = getIfNOTSPECIFIEDfield(name_scraped)
+
         description_scraped = browser.find_element(By.CLASS_NAME, "index-module_preserve-new-lines__ZOcGy").text
+        description_scraped = getIfNOTSPECIFIEDfield(description_scraped)
+
         house_features = browser.find_elements(By.CLASS_NAME, "feature-list_feature__8a4rn")
         house = getFeaturesHouse(browser, 
                                 house_features,
