@@ -29,11 +29,11 @@ if __name__ == '__main__':
     login(browser)
     try:
         
-        data_immobile_pages = scrollByPage(browser, 3, 0)
+        data_immobile_pages = scrollByPage(browser, 2, 0)
         # data_immobile_pages =  Data_immobile(['name'], ['223'], ['85'], ['3'], ['2'], ['description'], ['title_01'], ['url'], ['3345679876'],[False], ['RENT']);
         if data_immobile_pages is not None:
             # write on excel
-            post_api_subito(data_immobile_pages)
+            
             send_message_by_data_house.send_message(data_immobile_pages)
         else:
            print("[STACKTRACE] Error __main__:data_immobile_pages  - is None")

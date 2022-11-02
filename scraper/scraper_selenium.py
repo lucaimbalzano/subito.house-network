@@ -17,7 +17,6 @@ linkForNewTab = ''
 linksNotFound = []
 numberNotFound = []
 house = None;
-houseList = []
 houseListByPage = []
 
 def login(browser):
@@ -43,16 +42,15 @@ def getUrlHousesListPage(number_page):
 def scrollByPage(browser, num_pages_to_scroll, index_start_num_cards_to_scroll):
     browser.get(settings.BASE_LINK_RENT_HOUSE + str(1) + settings.TIPOLOGY_ADVERTISER_FILTER)
     time.sleep(1)
-    data_immobile_pages = []
 
     for index_page in range(0, num_pages_to_scroll):
         print("[DEBUG] retrieving data from " + str(index_page) + " page")
-        data_immobile = scrapingFromUrl(browser, index_page, index_start_num_cards_to_scroll)
-        if data_immobile is not None:
-            data_immobile_pages.append(data_immobile)
-        else:
-            return data_immobile_pages
-    return data_immobile_pages
+        houseList = []
+        checkHouseListPage = scrapingFromUrl(browser, index_page, index_start_num_cards_to_scroll, houseList)
+        if checkHouseListPage == 0:
+            return houseListByPage
+            
+    return houseListByPage
 
 def getVetrinaByCard(all_links_cards, index_cards):
     if all_links_cards[index_cards].accessible_name.find('VETRINA') != -1:
@@ -61,11 +59,11 @@ def getVetrinaByCard(all_links_cards, index_cards):
     else:
         return False
 
-def scrapingFromUrl(browser, index_page, index_start_num_cards):
+def scrapingFromUrl(browser, index_page, index_start_num_cards, houseList):
     browser.get(getUrlHousesListPage(index_page))
     all_links_cards = browser.find_elements(By.CLASS_NAME, "BigCard-module_link__kVqPE")
     if len(all_links_cards) == 0:
-        return houseListByPage
+        return 0
    
     try:
 
@@ -73,16 +71,13 @@ def scrapingFromUrl(browser, index_page, index_start_num_cards):
         len_all_links_cards = 5
         for index_cards in range(index_start_num_cards, len_all_links_cards):
             print("[DEBUG] retrieving data from card " + str(index_cards))
-            houseList = []
-
             # TODO for when i'll handle also sell
             advertising_field = 'RENT'
             vetrina_field = getVetrinaByCard(all_links_cards, index_cards)
             urlHouseDetail = all_links_cards[index_cards].get_attribute('href')
-            scrapeHouseDetailFromNewTab(browser, urlHouseDetail, vetrina_field, advertising_field)
+            scrapeHouseDetailFromNewTab(browser, urlHouseDetail, vetrina_field, advertising_field, houseList)
             
-            houseListByPage.append(houseList)
-        return houseListByPage      
+        return houseListByPage.append(houseList)    
 
     # TODO check-double this ex handling
     except NoSuchElementException:
@@ -169,7 +164,7 @@ def getNumber(browser):
         return 0
 
 
-def scrapeHouseDetailFromNewTab(browser, url, vetrina_field, advertising_field):
+def scrapeHouseDetailFromNewTab(browser, url, vetrina_field, advertising_field, houseList):
     pin_tab = openAndSaveNetTabPosition(browser, url)
     try:
         number_scraped = getNumber(browser)

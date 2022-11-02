@@ -17,18 +17,9 @@ def print_responsetext(response,status_code, request_type):
     print('STATUS CODE: '+status_code)
     print('BODY REPOSNE: '+json.dumps(response.text,indent=4))
 
-def post_api_subito(house):
+def post_api_subito(house_dto):
     uri = settings.BASE_URI + settings.PORT + settings.POST_SUBITO_REQ
-    not_specified = 'NOT SPECIFIED'
-    if house.space == '' or house.space == ' ':
-        house.space = not_specified
-    if house.rooms == '' or house.rooms == ' ':
-        house.rooms = not_specified
-    if house.floor == '' or house.floor == ' ':
-        house.floor = not_specified
-    
-    house_dto = Data_immobile(house.name[0], house.price[0], house.space, house.rooms, house.floor, house.description[0], house.title[0], house.url[0], house.number[0], house.vetrina[0], house.advertising[0])
-    house_req_dto = HouseRequestDTO(house_dto.name,house_dto.price,house_dto.space,house_dto.rooms,house_dto.floor,house_dto.description,house_dto.title,house_dto.url,house_dto.number,house_dto.vetrina,house_dto.advertising, not_specified, not_specified,not_specified, not_specified, not_specified)
+    house_req_dto = HouseRequestDTO(house_dto.name,house_dto.price,house_dto.space,house_dto.rooms,house_dto.floor,house_dto.description,house_dto.title,house_dto.url,house_dto.number,house_dto.vetrina,house_dto.advertising,house_dto.bathrooms, house_dto.parking, house_dto.energyClass, house_dto.energyHeating, house_dto.urlUserProfile)
     house_req_dto = json.dumps(house_req_dto.__dict__, indent=4)
     
     try:
