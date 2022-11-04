@@ -6,6 +6,7 @@ from asyncio.log import logger
 import sys
 import time
 import traceback
+import random
 
 from data_immobile import Data_immobile
 from selenium.common.exceptions import NoSuchElementException
@@ -74,6 +75,7 @@ def scrollByPage(browser, num_pages_to_scroll, index_start_num_cards_to_scroll):
 
     for index_page in range(0, num_pages_to_scroll):
         print("[DEBUG] retrieving data from " + str(index_page) + " page")
+       
         houseList = []
         checkHouseListPage = scrapingFromUrl(browser, index_page, index_start_num_cards_to_scroll, houseList)
         if checkHouseListPage == 0:
@@ -85,20 +87,20 @@ def scrollByPage(browser, num_pages_to_scroll, index_start_num_cards_to_scroll):
 
 def scrapingFromUrl(browser, index_page, index_start_num_cards, houseList):
     browser.get(getUrlHousesListPage(index_page))
+    print('[DEBUG] url page: '+str((getUrlHousesListPage(index_page))))
+
     all_links_cards = browser.find_elements(By.CLASS_NAME, "BigCard-module_link__kVqPE")
     if len(all_links_cards) == 0:
         return 0
    
     try:
-
-        # TODO len(all_links_cards)     
-        len_all_links_cards = 5
-        for index_cards in range(index_start_num_cards, len_all_links_cards):
+        for index_cards in range(index_start_num_cards,  len(all_links_cards)):
             print("[DEBUG] retrieving data from card " + str(index_cards))
             # TODO for when i'll handle also sell
             advertising_field = 'RENT'
             vetrina_field = getVetrinaByCard(all_links_cards, index_cards)
             urlHouseDetail = all_links_cards[index_cards].get_attribute('href')
+            print('[DEBUG] card url: '+ str(urlHouseDetail))
             scrapeHouseDetailFromNewTab(browser, urlHouseDetail, vetrina_field, advertising_field, houseList)
             
         return houseListByPage.append(houseList)    
@@ -153,7 +155,7 @@ def getFeaturesHouse(browser,
         energyHeating_scraped = energy_features[1] if energy_features[1] != '-' else 'NOT SPECIFIED'
         energyClass_scraped = energy_features[3] if energy_features[3] != '-' else 'NOT SPECIFIED'
     except Exception as e:
-        logger.error('[ERROR] energy features error occurred: not found')
+        # logger.error('[ERROR] energy features error occurred: not found')
         sys.exc_clear()
         pass
     finally:
@@ -203,6 +205,8 @@ def scrapeHouseDetailFromNewTab(browser, url, vetrina_field, advertising_field, 
     pin_tab = openAndSaveNetTabPosition(browser, url)
     try:
         number_scraped = getNumber(browser)
+        if number_scraped == 0:
+            number_scraped = '404-' + str(random.randrange(999, 999999))
 
         title_scraped = browser.find_element(By.CLASS_NAME, "AdInfo_ad-info__title__7jXnY").text
         title_scraped = getIfNOTSPECIFIEDfield(title_scraped)
@@ -218,6 +222,8 @@ def scrapeHouseDetailFromNewTab(browser, url, vetrina_field, advertising_field, 
 
         house_features = browser.find_elements(By.CLASS_NAME, "feature-list_feature__8a4rn")
         house = getFeaturesHouse(browser, 
+
+        
                                 house_features,
                                 name_scraped,
                                 price_scraped,

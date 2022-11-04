@@ -5,6 +5,7 @@ import requests
 import settings.settings_api as settings
 from data_immobile import Data_immobile
 from request.dto.house_request_dto import HouseRequestDTO, HouseRequestDTOEncoder
+import random
 
 
 def print_response(response,status_code, request_type, url_house, number):
@@ -33,6 +34,8 @@ def post_api_subito(house_dto):
 
     print_response(response.json(), str(response.status_code), 'POST', house_dto.url, house_dto.number)
     return response
+
+    
     
 
 def get_api_subito(id_house):
