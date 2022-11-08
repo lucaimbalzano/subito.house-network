@@ -69,15 +69,19 @@ def openAndSaveNetTabPosition(browser, url):
 
 
 
-def scrollByPage(browser, num_pages_to_scroll, index_start_num_cards_to_scroll):
-    browser.get(settings.BASE_LINK_RENT_HOUSE + str(1) + settings.TIPOLOGY_ADVERTISER_FILTER)
-    time.sleep(1)
+def scrollByPage(browser, num_pages_to_scroll, index_start_num_cards_to_scroll, adv):
+    if adv == 'RENT':
+        browser.get(settings.BASE_LINK_RENT_HOUSE + str(1) + settings.TIPOLOGY_ADVERTISER_FILTER)
+        time.sleep(1)
+    else:
+        browser.get(settings.BASE_LINK_SALE_HOUSE + str(1) + settings.TIPOLOGY_ADVERTISER_FILTER)
+        time.sleep(1)
 
     for index_page in range(0, num_pages_to_scroll):
         print("[DEBUG] retrieving data from " + str(index_page) + " page")
        
         houseList = []
-        checkHouseListPage = scrapingFromUrl(browser, index_page, index_start_num_cards_to_scroll, houseList)
+        checkHouseListPage = scrapingFromUrl(browser, index_page, index_start_num_cards_to_scroll, houseList, adv)
         if checkHouseListPage == 0:
             return houseListByPage
             
@@ -85,7 +89,7 @@ def scrollByPage(browser, num_pages_to_scroll, index_start_num_cards_to_scroll):
 
 
 
-def scrapingFromUrl(browser, index_page, index_start_num_cards, houseList):
+def scrapingFromUrl(browser, index_page, index_start_num_cards, houseList, advertising_from_input):
     browser.get(getUrlHousesListPage(index_page))
     print('[DEBUG] url page: '+str((getUrlHousesListPage(index_page))))
 
@@ -97,7 +101,7 @@ def scrapingFromUrl(browser, index_page, index_start_num_cards, houseList):
         for index_cards in range(index_start_num_cards,  len(all_links_cards)):
             print("[DEBUG] retrieving data from card " + str(index_cards))
             # TODO for when i'll handle also sell
-            advertising_field = 'RENT'
+            advertising_field = advertising_from_input
             vetrina_field = getVetrinaByCard(all_links_cards, index_cards)
             urlHouseDetail = all_links_cards[index_cards].get_attribute('href')
             print('[DEBUG] card url: '+ str(urlHouseDetail))

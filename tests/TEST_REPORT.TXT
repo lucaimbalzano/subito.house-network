@@ -1,0 +1,13 @@
+
+4/11/2022
+
+[DEBUG] total messages sent: 258
+[ TIME EXECUTION ]
+[ MILLISECONDS: 3762997 ms ]
+[ SECONDS 3762.997 s ]
+[ MINUTES 62.71661666666667 m ]
+
+POSTGRES:
+SELECT count(id) as DATA_INSERTED from api_house === 302 (first 2 rows defualt)
+
+
