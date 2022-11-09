@@ -1,46 +1,71 @@
 
 
 
-def yn_console(field_yn,field_name):
-    while True: 
-        print(' enter the key ''exit'' to escape.. ')
-        boolResult =  input('Do you want to send '+field_name+' [y/n]')
-        if boolResult != 'y' or field_yn != 'Y' or boolResult != 'n' or field_yn != 'N' or field_yn != 'exit':
-            print('you didnt insert y,Y,n,N,exit..')
-            print('you inserted: '+str(field_yn))
-        else:
-            if boolResult != 'y' or field_yn != 'Y':
-                field_yn = True
-            elif boolResult != 'n' or field_yn != 'N':
-                field_yn = False
-            elif boolResult == 'exit':
-                return True
+
+
+
 
 
 def input_console():
-   
+       
    advertising = ''
    message = True
    excel = True
    exit = False
 
+   print(' ')
    while True: 
-    print(' enter the key ''exit'' to escape.. ')
-    advertising =  input('Do you want to scrape Rent[1] or Sale houses[2]')
-    if advertising != 1 or advertising !=2 or advertising != 'exit':
-        print('you didnt insert 1,2,exit..')
-        print('you inserted: '+str(advertising))
-    else:
-        if advertising == 'exit':
-                exit = True
-        break
-    
-    if yn_console(message,'whatsapp message'):
-        exit = True
-    if yn_console(excel,'excel'):
-        exit = True
+       print(' ')
+       print(' enter the key ''exit'' to escape.. ')
+       result_input =  input('Do you want to scrape Rent[1] or Sale[2] houses :'  )
+       if result_input != '1' and result_input !='2' and result_input != 'exit':
+           print('you didnt insert 1,2,exit..')
+           print('you inserted: '+str(result_input))
+       else:
+           if result_input == 'exit':
+                   exit = True
+           elif result_input == '1':
+               advertising = '1'
+               break
+           elif result_input == '2':
+               advertising = '2'
+               break
+   print(' ')
+   while True: 
+       print(' ')
+       print(' enter the key ''exit'' to escape.. ')
+       boolResult =  input('Do you want to send whatsapp message [y/n]:  ')
+       if boolResult != 'y' and boolResult != 'Y' and boolResult != 'n' and boolResult != 'N' and boolResult != 'exit':
+           print('you didnt insert y,Y,n,N,exit..')
+           print('you inserted: '+str(boolResult))
+       else:
+           if boolResult == 'y' or boolResult == 'Y':
+               message = True
+               break
+           elif boolResult == 'n' or boolResult == 'N':
+               message = False
+               break
+           elif boolResult == 'exit':
+               exit = True
+   
+   while True: 
+     print(' ')
+     print(' enter the key ''exit'' to escape.. ')
+     boolResult =  input('Do you want to write excel [y/n]:  ')
+     if boolResult != 'y' and boolResult != 'Y' and boolResult != 'n' and boolResult != 'N' and boolResult != 'exit':
+         print('you didnt insert y,Y,n,N,exit..')
+         print('you inserted: '+str(boolResult))
+     else:
+         if boolResult == 'y' or boolResult == 'Y':
+             excel = True
+             break
+         elif boolResult == 'n' or boolResult == 'N':
+             excel = False
+             break
+         elif boolResult == 'exit':
+             exit = True
 
-    return Console(advertising,message,excel,exit)
+   return Console(advertising,message,excel,exit)
 
 
 

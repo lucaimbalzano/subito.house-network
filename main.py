@@ -6,7 +6,7 @@ from messages import send_message_by_data_house
 from messages.send_message_by_data_house_selenium import send_message_whatsapp
 from response.res_api_subito_message_get_all import HousesListDTO, HousesListDTODecoder
 from scraper.scraper_selenium import *
-from tests.dto.console import input_console
+from tests.dto.console import Console, input_console
 from tests.dto.test_data_immobile import getHouseListPageTest
 from utils.auxiliary_functions_excel import writeExcelByDataImmobile
 from utils.cronometer import ChronoMeter
@@ -31,7 +31,8 @@ if __name__ == '__main__':
 
     
     try:
-        console = input_console()
+        # console = input_console()
+        console =  Console('2',True,False,False)
         if console.exit:
             print('Exit with sucess')
             pass

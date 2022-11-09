@@ -186,7 +186,7 @@ def getFeaturesHouse(browser,
                         )
 
 
-def getNumber(browser):
+def getNumberOrContatta(browser):
     all_buttons_new_tab = browser.find_elements(By.CLASS_NAME, "index-module_icon-only__gkRU8")
     chiama_btn = [btn for btn in all_buttons_new_tab if btn.text == "Contatta"]
     index_all_buttons = all_buttons_new_tab.index(chiama_btn[1])
@@ -202,13 +202,22 @@ def getNumber(browser):
             numberNotFound.append(linkForNewTab)
             return 0
     else:
+        if len(chiama_btn) > 0 :
+            chiama_btn[0].click()
+            time.sleep(2)
+            txtAreaContatta = browser.find_element(By.CLASS_NAME, 'index-module_weight-book__AVaSr')
+            txtAreaContatta.clear() 
+            testo = 'Buonanotte a te, buonanotte a me, buonanotte a chi ancora non ho incontrato\n'+'Buonanotte pure a lei\n'+'Anche oggi che ti vorrei semplicemente\n'+'Semplicemente\n'+'Semplicemente\n'+'(Nananana)\n'
+            txtAreaContatta.send_keys(testo)
+            browser.find_element(By.CLASS_NAME, "index-module_icon-only__gkRU-2").click()
+            time.sleep(2)
         return 0
 
 
 def scrapeHouseDetailFromNewTab(browser, url, vetrina_field, advertising_field, houseList):
     pin_tab = openAndSaveNetTabPosition(browser, url)
     try:
-        number_scraped = getNumber(browser)
+        number_scraped = getNumberOrContatta(browser)
         if number_scraped == 0:
             number_scraped = '404-' + str(random.randrange(999, 999999))
 
