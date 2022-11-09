@@ -78,7 +78,7 @@ def scrollByPage(browser, num_pages_to_scroll, index_start_num_cards_to_scroll, 
         time.sleep(1)
 
     for index_page in range(0, num_pages_to_scroll):
-        print("[DEBUG] retrieving data from " + str(index_page) + " page")
+        print("[DEBUG] retrieving data from " + str(index_page) + " page =========================================================================")
        
         houseList = []
         checkHouseListPage = scrapingFromUrl(browser, index_page, index_start_num_cards_to_scroll, houseList, adv)
@@ -204,12 +204,16 @@ def getNumberOrContatta(browser):
     else:
         if len(chiama_btn) > 0 :
             chiama_btn[0].click()
-            time.sleep(2)
+            time.sleep(4)
             txtAreaContatta = browser.find_element(By.CLASS_NAME, 'index-module_weight-book__AVaSr')
             txtAreaContatta.clear() 
             testo = 'Buonanotte a te, buonanotte a me, buonanotte a chi ancora non ho incontrato\n'+'Buonanotte pure a lei\n'+'Anche oggi che ti vorrei semplicemente\n'+'Semplicemente\n'+'Semplicemente\n'+'(Nananana)\n'
             txtAreaContatta.send_keys(testo)
-            browser.find_element(By.CLASS_NAME, "index-module_icon-only__gkRU-2").click()
+            submit = browser.find_element("xpath", "//button[@type='submit']").click()
+            # SPAN
+            # browser.find_element(By.CLASS_NAME, "index-module_button-text__VZcja").click()
+            # BUTTON
+            # browser.find_element(By.CLASS_NAME, "index-module_icon-only__gkRU-2").click()
             time.sleep(2)
         return 0
 
