@@ -72,7 +72,7 @@ def send_message_whatsapp(data_immobile_list_by_page):
                 response = req.post_api_subito(data_immobile_list_by_page[index_page][index_house])
                 if response.status_code != 400 and response.status_code != 404:
                     number = data_immobile_list_by_page[index_page][index_house].number
-                    msg_from_settings_message = data_immobile_list_by_page[index_page][index_house].number +'\n'+ settings_message.MSG_INTRO_RENT_01 + data_immobile_list_by_page[index_page][index_house].url + settings_message.MSG_PROPOSAL_RENT_01 + settings_message.PDR_EXAMPLE + settings_message.MSG_TIME_APPOINTMENT_02
+                    msg_from_settings_message = data_immobile_list_by_page[index_page][index_house].number +' \n '+ settings_message.MSG_INTRO_RENT_01 +' \n '+ data_immobile_list_by_page[index_page][index_house].url +' \n '+ settings_message.MSG_PROPOSAL_RENT_01 +' \n '+ settings_message.PDR_EXAMPLE +' \n '+ settings_message.MSG_TIME_APPOINTMENT_02
 
 
                     if cont_test == 5:
@@ -103,7 +103,7 @@ def send_message_whatsapp(data_immobile_list_by_page):
                                     click_btn.click()
                                     total_messages_sent+=1
                                 sent=True
-                                sleep(3)
+                                sleep(35)
                                 print(style.GREEN + 'Message sent to: ' + number + style.RESET)
 
                             except Exception as e:

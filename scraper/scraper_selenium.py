@@ -40,8 +40,11 @@ def login(browser):
     time.sleep(4)
 
 
-def getUrlHousesListPage(number_page):
-    return settings.BASE_LINK_RENT_HOUSE + str(number_page) + settings.TIPOLOGY_ADVERTISER_FILTER
+def getUrlHousesListPage(number_page, adv):
+    if adv == 'RENT': 
+        return settings.BASE_LINK_RENT_HOUSE + str(number_page) + settings.TIPOLOGY_ADVERTISER_FILTER
+    else:
+        return settings.BASE_LINK_SALE_HOUSE + str(number_page) + settings.TIPOLOGY_ADVERTISER_FILTER
 
 def getIfNOTSPECIFIEDfield(field_retived):
     return field_retived if field_retived != '' else 'NOT SPECIFIED'
@@ -90,8 +93,8 @@ def scrollByPage(browser, num_pages_to_scroll, index_start_num_cards_to_scroll, 
 
 
 def scrapingFromUrl(browser, index_page, index_start_num_cards, houseList, advertising_from_input):
-    browser.get(getUrlHousesListPage(index_page))
-    print('[DEBUG] url page: '+str((getUrlHousesListPage(index_page))))
+    browser.get(getUrlHousesListPage(index_page, advertising_from_input))
+    print('[DEBUG] url page: '+str((getUrlHousesListPage(index_page, advertising_from_input))))
 
     all_links_cards = browser.find_elements(By.CLASS_NAME, "BigCard-module_link__kVqPE")
     if len(all_links_cards) == 0:
@@ -110,7 +113,8 @@ def scrapingFromUrl(browser, index_page, index_start_num_cards, houseList, adver
         return houseListByPage.append(houseList)    
 
     # TODO check-double this ex handling
-    except NoSuchElementException:
+    # except NoSuchElementException:
+    except Exception:
         traceback.print_exc()
         linksNotFound.append(linkForNewTab)
     finally:
@@ -118,6 +122,7 @@ def scrapingFromUrl(browser, index_page, index_start_num_cards, houseList, adver
 
 
 def getFeaturesHouse(browser,
+                            location_scraped,
                             house_features,
                             name_scraped,
                             price_scraped,
@@ -152,12 +157,17 @@ def getFeaturesHouse(browser,
             bathroom_scraped =  field[1] if field[1] != '-' else 'NOT SPECIFIED'
         if field[0] == 'Parcheggio':
             parking_scraped =  field[1] if field[1] != '-' else 'NOT SPECIFIED'
+        if field[0] == 'Classe energetica':
+            energyClass_scraped = field[1] if field[1] != '-' else 'NOT FOUND'
+        if field[0] == 'Riscaldamento':
+            energyHeating_scraped = field[1] if field[1] != '-' else 'NOT FOUND'
 
 
     try:
-        energy_features = browser.find_element(By.CLASS_NAME, "feature-list_list__UNF-4c").text.split('\n')
-        energyHeating_scraped = energy_features[1] if energy_features[1] != '-' else 'NOT SPECIFIED'
-        energyClass_scraped = energy_features[3] if energy_features[3] != '-' else 'NOT SPECIFIED'
+        if energyHeating_scraped == 'NOT SPECIFIED' or energyClass_scraped == 'NOT SPECIFIED':
+            energy_features = browser.find_element(By.CLASS_NAME, "feature-list_list__UNF-4c").text.split('\n')
+            energyHeating_scraped = energy_features[1] if energy_features[1] != '-' else 'NOT SPECIFIED'
+            energyClass_scraped = energy_features[3] if energy_features[3] != '-' else 'NOT SPECIFIED'
     except Exception as e:
         # logger.error('[ERROR] energy features error occurred: not found')
         sys.exc_clear()
@@ -182,44 +192,56 @@ def getFeaturesHouse(browser,
                             parking_scraped,
                             energyClass_scraped,
                             energyHeating_scraped,
-                            urlProfile_scraped_clean
+                            urlProfile_scraped_clean,
+                            location_scraped
                         )
 
 
 def getNumberOrContatta(browser):
-    all_buttons_new_tab = browser.find_elements(By.CLASS_NAME, "index-module_icon-only__gkRU8")
-    chiama_btn = [btn for btn in all_buttons_new_tab if btn.text == "Contatta"]
-    index_all_buttons = all_buttons_new_tab.index(chiama_btn[1])
+    try:
+        all_buttons_new_tab = browser.find_elements(By.CLASS_NAME, "index-module_icon-only__gkRU8")
+        chiama_btn = [btn for btn in all_buttons_new_tab if btn.text == "Contatta"]
+        index_all_buttons = all_buttons_new_tab.index(chiama_btn[1])
 
-    if len(chiama_btn) > 0 and int(index_all_buttons) == 6:
-        all_buttons_new_tab[int(index_all_buttons) - 1].click()
-        time.sleep(1)
-        if len(browser.find_elements(By.CLASS_NAME, "index-module_isVisible__GstjN")) == 1:
-            number_scraped = browser.find_elements(By.CLASS_NAME, "index-module_isVisible__GstjN")[0].text
-            number_scraped_editing = number_scraped.replace("Numero di telefono", "")
-            return number_scraped_editing.replace("\n", "")
+        if len(chiama_btn) > 0 and int(index_all_buttons) == 6:
+            all_buttons_new_tab[int(index_all_buttons) - 1].click()
+            time.sleep(1)
+            if len(browser.find_elements(By.CLASS_NAME, "index-module_isVisible__GstjN")) == 1:
+                number_scraped = browser.find_elements(By.CLASS_NAME, "index-module_isVisible__GstjN")[0].text
+                number_scraped_editing = number_scraped.replace("Numero di telefono", "")
+                return number_scraped_editing.replace("\n", "")
+            else:
+                numberNotFound.append(linkForNewTab)
+                return 0
         else:
-            numberNotFound.append(linkForNewTab)
+            if len(chiama_btn) > 0 :
+                chiama_btn[0].click()
+                time.sleep(4)
+                txtAreaContatta = browser.find_element(By.CLASS_NAME, 'index-module_weight-book__AVaSr')
+                txtAreaContatta.clear()
+                # testo = 'Buonanotte a te, buonanotte a me, buonanotte a chi ancora non ho incontrato\n'+'Buonanotte pure a lei\n'+'Anche oggi che ti vorrei semplicemente\n'+'Semplicemente\n'+'Semplicemente\n'+'(Nananana)\n'
+                testo = 'Scusa ho sbagliato'
+                txtAreaContatta.send_keys(testo)
+                browser.find_element(By.CLASS_NAME, 'form-module_submitButton__HaEyv').click()
+
+                #SUBMIT
+                #submit = browser.find_element("xpath", "//button[@type='submit']").click()
+                # SPAN
+                # browser.find_element(By.CLASS_NAME, "index-module_button-text__VZcja").click()
+                # BUTTON
+                # browser.find_element(By.CLASS_NAME, "index-module_icon-only__gkRU-2").click()
+                time.sleep(2)
             return 0
-    else:
-        if len(chiama_btn) > 0 :
-            chiama_btn[0].click()
-            time.sleep(4)
-            txtAreaContatta = browser.find_element(By.CLASS_NAME, 'index-module_weight-book__AVaSr')
-            txtAreaContatta.clear() 
-            testo = 'Buonanotte a te, buonanotte a me, buonanotte a chi ancora non ho incontrato\n'+'Buonanotte pure a lei\n'+'Anche oggi che ti vorrei semplicemente\n'+'Semplicemente\n'+'Semplicemente\n'+'(Nananana)\n'
-            txtAreaContatta.send_keys(testo)
-            submit = browser.find_element("xpath", "//button[@type='submit']").click()
-            # SPAN
-            # browser.find_element(By.CLASS_NAME, "index-module_button-text__VZcja").click()
-            # BUTTON
-            # browser.find_element(By.CLASS_NAME, "index-module_icon-only__gkRU-2").click()
-            time.sleep(2)
-        return 0
+    except Exception as e:
+        print('[ERROR] Error occurred during scraping number: ' + str(e))
+        traceback.print_exc()
+        pass
 
 
 def scrapeHouseDetailFromNewTab(browser, url, vetrina_field, advertising_field, houseList):
     pin_tab = openAndSaveNetTabPosition(browser, url)
+    house = None
+    title_scraped = 'Title Not Found'
     try:
         number_scraped = getNumberOrContatta(browser)
         if number_scraped == 0:
@@ -237,10 +259,12 @@ def scrapeHouseDetailFromNewTab(browser, url, vetrina_field, advertising_field, 
         description_scraped = browser.find_element(By.CLASS_NAME, "index-module_preserve-new-lines__ZOcGy").text
         description_scraped = getIfNOTSPECIFIEDfield(description_scraped)
 
-        house_features = browser.find_elements(By.CLASS_NAME, "feature-list_feature__8a4rn")
-        house = getFeaturesHouse(browser, 
+        location_scraped = browser.find_element(By.CLASS_NAME, 'AdInfo_ad-info__location__text__ZBFdn').text
+        location_scraped = getIfNOTSPECIFIEDfield(location_scraped)
 
-        
+        house_features = browser.find_elements(By.CLASS_NAME, "feature-list_feature__8a4rn")
+        house = getFeaturesHouse(browser,
+                                location_scraped,
                                 house_features,
                                 name_scraped,
                                 price_scraped,
@@ -251,13 +275,17 @@ def scrapeHouseDetailFromNewTab(browser, url, vetrina_field, advertising_field, 
                                 vetrina_field,
                                 advertising_field)
         
-
+    except Exception as e:
+        print('--- Error occurred: ' + str(e))
+        traceback.print_exc()
+        pass
     except NoSuchElementException:
         print('--- Error occurred, Title Apartment: ' + str(title_scraped) + '; URL: ' + str(url))
         pass
 
     finally:
-        houseList.append(house)
+        if house is not None:
+            houseList.append(house)
 
         browser.close()
         browser.switch_to.window(pin_tab)

@@ -8,7 +8,7 @@ PATH_CHROME_DRIVER = 'C:/Users/lucai/Documents/Utils/SW/WebDriver/106/0.5249.61/
 
 BASE_LINK_RENT_HOUSE = 'https://www.subito.it/annunci-lombardia/affitto/appartamenti/milano/milano/?o='
 
-BASE_LINK_SALE_HOUSE = 'https://www.subito.it/annunci-lombardia/vendita/appartamenti/milano/?advt=0'
+BASE_LINK_SALE_HOUSE = 'https://www.subito.it/annunci-lombardia/vendita/appartamenti/milano/?o='
 
 
 

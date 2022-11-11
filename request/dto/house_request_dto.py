@@ -3,7 +3,7 @@ from typing import Any
 
 
 class HouseRequestDTO:
-  def __init__(self,name,price,space,rooms,floor,description,title,url,number, vetrina, advertising, bathrooms, parking, energyClass, energyHeating, urlUserProfile):
+  def __init__(self,name,price,space,rooms,floor,description,title,url,number, vetrina, advertising, bathrooms, parking, energyClass, energyHeating, urlUserProfile, location):
     self.name = name
     self.price = price
     self.space = space
@@ -20,6 +20,7 @@ class HouseRequestDTO:
     self.energyClass = energyClass
     self.energyHeating = energyHeating
     self.urlUserProfile = urlUserProfile
+    self.location = location
 
   def __setattr__(self, name: str, value: Any) -> None:
     super().__setattr__(name, value)

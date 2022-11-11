@@ -31,6 +31,7 @@ def post_api_subito(house_dto):
         response = requests.post(uri, data=house_req_dto,headers=headers)
     except Exception as e:
         print('[STACKTRACE] POST::REQ_API_SUBITO_MESSAGE: ' + str(e))
+        pass
 
     print_response(response.json(), str(response.status_code), 'POST', house_dto.url, house_dto.number)
     return response
