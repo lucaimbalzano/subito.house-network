@@ -1,4 +1,7 @@
 # coding=utf-8
+# Dreams without Goals are just Dreams
+#
+# - @lucaimbalzano
 
 from email import *
 from browser.browser import Browser
@@ -40,8 +43,7 @@ if __name__ == '__main__':
             login(browser)
             
             adv = 'RENT' if console.advertising == '1' else 'SALE'
-            # TODO PAGES
-            houseListByPage = scrollByPage(browser, 5, 0, adv)
+            houseListByPage = scrollByPage(browser, 50, 0, adv)
             if houseListByPage is not None:
                 if console.excel:
                     print('//TODO write on excel')

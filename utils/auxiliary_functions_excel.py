@@ -1,3 +1,8 @@
+# Dreams without Goals are just Dreams
+#
+# - @lucaimbalzano
+
+
 import datetime
 from openpyxl import Workbook
 

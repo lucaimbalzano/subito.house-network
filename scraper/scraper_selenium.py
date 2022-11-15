@@ -8,7 +8,6 @@ import time
 import traceback
 import random
 
-from data_immobile import Data_immobile
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from request.dto.house_request_dto import HouseRequestDTO
@@ -19,7 +18,6 @@ linksNotFound = []
 numberNotFound = []
 house = None;
 houseListByPage = []
-
 
 
 
@@ -69,9 +67,6 @@ def openAndSaveNetTabPosition(browser, url):
 
 
 
-
-
-
 def scrollByPage(browser, num_pages_to_scroll, index_start_num_cards_to_scroll, adv):
     if adv == 'RENT':
         browser.get(settings.BASE_LINK_RENT_HOUSE + str(1) + settings.TIPOLOGY_ADVERTISER_FILTER)
@@ -103,22 +98,17 @@ def scrapingFromUrl(browser, index_page, index_start_num_cards, houseList, adver
         return 0
    
     try:
-        # TODO
-        # len(all_links_cards)
-        len_cards = 29
-        for index_cards in range(index_start_num_cards,  len_cards):
+        
+        for index_cards in range(index_start_num_cards, len(all_links_cards)):
             print("[DEBUG] retrieving data from card " + str(index_cards))
-            # TODO for when i'll handle also sell
+        
             advertising_field = advertising_from_input
             vetrina_field = getVetrinaByCard(all_links_cards, index_cards)
             urlHouseDetail = all_links_cards[index_cards].get_attribute('href')
+        
             print('[DEBUG] card url: '+ str(urlHouseDetail))
-            scrapeHouseDetailFromNewTab(browser, urlHouseDetail, vetrina_field, advertising_field, houseList)
-            
+            scrapeHouseDetailFromNewTab(browser, urlHouseDetail, vetrina_field, advertising_field, houseList)    
         return houseListByPage.append(houseList)    
-
-    # TODO check-double this ex handling
-    # except NoSuchElementException:
     except Exception:
         traceback.print_exc()
         linksNotFound.append(linkForNewTab)
@@ -224,17 +214,11 @@ def getNumberOrContatta(browser):
                 time.sleep(4)
                 txtAreaContatta = browser.find_element(By.CLASS_NAME, 'index-module_weight-book__AVaSr')
                 txtAreaContatta.clear()
-                # testo = 'Buonanotte a te, buonanotte a me, buonanotte a chi ancora non ho incontrato\n'+'Buonanotte pure a lei\n'+'Anche oggi che ti vorrei semplicemente\n'+'Semplicemente\n'+'Semplicemente\n'+'(Nananana)\n'
+                # TODO change testo we want to send 
                 testo = 'Scusa ho sbagliato'
                 txtAreaContatta.send_keys(testo)
                 browser.find_element(By.CLASS_NAME, 'form-module_submitButton__HaEyv').click()
 
-                #SUBMIT
-                #submit = browser.find_element("xpath", "//button[@type='submit']").click()
-                # SPAN
-                # browser.find_element(By.CLASS_NAME, "index-module_button-text__VZcja").click()
-                # BUTTON
-                # browser.find_element(By.CLASS_NAME, "index-module_icon-only__gkRU-2").click()
                 time.sleep(2)
             return 0
     except Exception as e:
@@ -251,7 +235,7 @@ def scrapeHouseDetailFromNewTab(browser, url, vetrina_field, advertising_field, 
         number_scraped = getNumberOrContatta(browser)
         if number_scraped == 0 or number_scraped == None:
             number_scraped = '404-' + str(random.randrange(999, 999999))
-        
+
         title_scraped = browser.find_element(By.CLASS_NAME, "AdInfo_ad-info__title__7jXnY").text
         title_scraped = getIfNOTSPECIFIEDfield(title_scraped)
 

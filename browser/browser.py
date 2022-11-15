@@ -1,3 +1,8 @@
+# Dreams without Goals are just Dreams
+#
+# - @lucaimbalzano
+
+
 from selenium import webdriver
 from settings import settings
 

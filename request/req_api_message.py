@@ -1,10 +1,13 @@
+# Dreams without Goals are just Dreams
+#
+# - @lucaimbalzano
+
 import json
 import traceback
 
 import requests
 from request.dto.message_request_dto import MessageRequestDTO
 import settings.settings_api as settings
-from data_immobile import Data_immobile
 from request.dto.house_request_dto import HouseRequestDTO, HouseRequestDTOEncoder
 import random
 

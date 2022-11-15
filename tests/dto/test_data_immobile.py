@@ -1,15 +1,12 @@
-
-
+# Dreams without Goals are just Dreams
+#
+# - @lucaimbalzano
 
 
 import random
-from data_immobile import Data_immobile
 from request.dto.house_request_dto import HouseRequestDTO
 
 
-def get_fake_data_immobile():
-      url_list = ['XQ', 'XY']  
-      return Data_immobile("name","100","4", "4", "4", "description", "title", url_list , "3338902347")
 
 def getHouseListPageTest(adv):
       houseListPage = []

@@ -1,3 +1,7 @@
+# Dreams without Goals are just Dreams
+#
+# - @lucaimbalzano
+
 from json import JSONEncoder
 from typing import Any
 

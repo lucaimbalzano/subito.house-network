@@ -1,3 +1,7 @@
+# Dreams without Goals are just Dreams
+#
+# - @lucaimbalzano
+
 from os import system
 import traceback
 import time

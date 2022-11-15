@@ -1,3 +1,7 @@
+# Dreams without Goals are just Dreams
+#
+# - @lucaimbalzano
+
 import smtplib, os
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase

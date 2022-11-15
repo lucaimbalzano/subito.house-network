@@ -1,4 +1,6 @@
-
+# Dreams without Goals are just Dreams
+#
+# - @lucaimbalzano
 
 # DETAILS
 BASE_URI = 'http://127.0.0.1:'

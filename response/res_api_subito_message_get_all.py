@@ -1,3 +1,7 @@
+# Dreams without Goals are just Dreams
+#
+# - @lucaimbalzano
+
 from json import JSONEncoder, JSONDecoder
 from request.dto.house_request_dto import HouseRequestDTO
 

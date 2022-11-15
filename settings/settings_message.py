@@ -1,3 +1,7 @@
+# Dreams without Goals are just Dreams
+#
+# - @lucaimbalzano
+
 
 
 # GOOGLE DRIVE LINKS
@@ -18,7 +22,7 @@ MSG_TIME_APPOINTMENT_RENT_01 = 'preferisci incontrarci domani alle 18pm o alle 2
 MSG_TIME_APPOINTMENT_RENT_02 = 'scrivimi "𝗕𝗡𝗕" se vuoi anche tu il piano di rendimento!'
 
 
-
+#TODO change message values
 #SALE
 MSG_INTRO_SALE_01 = 'Buongiorno, sono 𝘚𝘪𝘮𝘰𝘯𝘦 𝘐𝘮𝘣𝘢𝘭𝘻𝘢𝘯𝘰 ed sono interessato al tuo immobile in vendita'
 

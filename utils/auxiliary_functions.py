@@ -1,9 +1,14 @@
+# Dreams without Goals are just Dreams
+#
+# - @lucaimbalzano
+
+
+
 import datetime as dt
 from bs4 import BeautifulSoup
 # import pandas as pd
 import openpyxl
 import requests,re,time
-from data_immobile import Data_immobile
 from datetime import datetime
 from openpyxl import Workbook
 
