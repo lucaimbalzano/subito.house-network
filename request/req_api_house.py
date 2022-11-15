@@ -14,16 +14,20 @@ def print_response(response,status_code, request_type, url_house, number):
     if number != 0:
         print('NUMBER: '+number)
     print('URL HOUSE: '+url_house)
-    print('BODY REPOSNE: '+str(json.dumps(response,indent=4)))
+    # print('BODY REPOSNE: '+str(json.dumps(response,indent=4)))
+    # TODO delete
+    print(' ')
 
 def print_responsetext(response,status_code, request_type):
     print('[DEBUG] '+request_type+'::HTTP-RESPONSE: ')
     print('STATUS CODE: '+status_code)
-    print('BODY REPOSNE: '+json.dumps(response.text,indent=4))
+    # print('BODY REPOSNE: '+json.dumps(response.text,indent=4))
+    # TODO delete
+    print(' ')
 
-def post_api_subito(house_dto):
+def insert_house_request(house_dto):
     uri = settings.BASE_URI + settings.PORT + settings.POST_SUBITO_REQ
-    house_req_dto = HouseRequestDTO(house_dto.name,house_dto.price,house_dto.space,house_dto.rooms,house_dto.floor,house_dto.description,house_dto.title,house_dto.url,house_dto.number,house_dto.vetrina,house_dto.advertising,house_dto.bathrooms, house_dto.parking, house_dto.energyClass, house_dto.energyHeating, house_dto.urlUserProfile)
+    house_req_dto = HouseRequestDTO(house_dto.name,house_dto.price,house_dto.space,house_dto.rooms,house_dto.floor,house_dto.description,house_dto.title,house_dto.url,house_dto.number,house_dto.vetrina,house_dto.advertising,house_dto.bathrooms, house_dto.parking, house_dto.energyClass, house_dto.energyHeating, house_dto.urlUserProfile, house_dto.location)
     house_req_dto = json.dumps(house_req_dto.__dict__, indent=4)
     
     try:
@@ -34,10 +38,7 @@ def post_api_subito(house_dto):
         pass
 
     print_response(response.json(), str(response.status_code), 'POST', house_dto.url, house_dto.number)
-    return response
-
-    
-    
+    return response    
 
 def get_api_subito(id_house):
     uri = settings.BASE_URI + settings.PORT + settings.GET_SUBITO_REQ + id_house
@@ -62,7 +63,7 @@ def get_api_subito_all_houses():
     return response
 
 
-def get_api_subito_check(number_house):
+def get_api_subito_check_number(number_house):
     uri = settings.BASE_URI + settings.PORT + settings.GET_SUBIOT_CHECK_REQ + number_house
     
     try:
@@ -87,7 +88,20 @@ def get_api_subito_all_houses():
     print_response(response.json(), str(response.status_code),'GET')
     return response
  
-
+def get_api_subito_check_number_adv(number_house, adv_house):
+    
+    uri = settings.BASE_URI + settings.PORT + settings.GET_SUBITO_CHECK_ADV_BY_NUMBER_REQ + number_house + '/' + adv_house
+    
+    try:
+        headers = {'Content-type': 'application/json'}
+        response = requests.get(uri)
+    except Exception as e:
+        print('[STACKTRACE] GET::REQ_API_SUBITO_MESSAGE: ' + str(e))
+    if response.text == '':
+        print_responsetext(response, '404','GET')
+    else:
+        print_responsetext(response, '200','GET')
+    return response.text
 
 # EXAMPLE REQ
 # {

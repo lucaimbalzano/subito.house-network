@@ -10,7 +10,6 @@ from tests.dto.console import Console, input_console
 from tests.dto.test_data_immobile import getHouseListPageTest
 from utils.auxiliary_functions_excel import writeExcelByDataImmobile
 from utils.cronometer import ChronoMeter
-from request.req_api_subito_message import get_api_subito, get_api_subito_all_houses, get_api_subito_check, post_api_subito
 from utils.auxiliary_functions import *
 from settings import settings
 import json
@@ -41,7 +40,8 @@ if __name__ == '__main__':
             login(browser)
             
             adv = 'RENT' if console.advertising == '1' else 'SALE'
-            houseListByPage = scrollByPage(browser, 3, 0, adv)
+            # TODO PAGES
+            houseListByPage = scrollByPage(browser, 5, 0, adv)
             if houseListByPage is not None:
                 if console.excel:
                     print('//TODO write on excel')
@@ -58,7 +58,7 @@ if __name__ == '__main__':
         pass
     
 
-    print('V001::SUBITO.HOUSE-NETWORK     - ENDED')
+    print('V001::SUBITO.HOUSE-NETWORK - ENDED')
     chrono.stop_chrono()
     chrono.print_time()
     exit(1)

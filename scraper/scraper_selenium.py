@@ -80,14 +80,16 @@ def scrollByPage(browser, num_pages_to_scroll, index_start_num_cards_to_scroll, 
         browser.get(settings.BASE_LINK_SALE_HOUSE + str(1) + settings.TIPOLOGY_ADVERTISER_FILTER)
         time.sleep(1)
 
-    for index_page in range(0, num_pages_to_scroll):
+    for index_page in range(1, num_pages_to_scroll):
         print("[DEBUG] retrieving data from " + str(index_page) + " page =========================================================================")
        
         houseList = []
         checkHouseListPage = scrapingFromUrl(browser, index_page, index_start_num_cards_to_scroll, houseList, adv)
         if checkHouseListPage == 0:
+            browser.close()
             return houseListByPage
-            
+    
+    browser.close()
     return houseListByPage
 
 
@@ -101,7 +103,10 @@ def scrapingFromUrl(browser, index_page, index_start_num_cards, houseList, adver
         return 0
    
     try:
-        for index_cards in range(index_start_num_cards,  len(all_links_cards)):
+        # TODO
+        # len(all_links_cards)
+        len_cards = 29
+        for index_cards in range(index_start_num_cards,  len_cards):
             print("[DEBUG] retrieving data from card " + str(index_cards))
             # TODO for when i'll handle also sell
             advertising_field = advertising_from_input
@@ -244,9 +249,9 @@ def scrapeHouseDetailFromNewTab(browser, url, vetrina_field, advertising_field, 
     title_scraped = 'Title Not Found'
     try:
         number_scraped = getNumberOrContatta(browser)
-        if number_scraped == 0:
+        if number_scraped == 0 or number_scraped == None:
             number_scraped = '404-' + str(random.randrange(999, 999999))
-
+        
         title_scraped = browser.find_element(By.CLASS_NAME, "AdInfo_ad-info__title__7jXnY").text
         title_scraped = getIfNOTSPECIFIEDfield(title_scraped)
 
