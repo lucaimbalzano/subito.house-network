@@ -11,7 +11,7 @@ import random
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from request.dto.house_request_dto import HouseRequestDTO
-from settings import settings
+from settings import settings, settings_message
 
 linkForNewTab = ''
 linksNotFound = []
@@ -107,7 +107,7 @@ def scrapingFromUrl(browser, index_page, index_start_num_cards, houseList, adver
             urlHouseDetail = all_links_cards[index_cards].get_attribute('href')
         
             print('[DEBUG] card url: '+ str(urlHouseDetail))
-            scrapeHouseDetailFromNewTab(browser, urlHouseDetail, vetrina_field, advertising_field, houseList)    
+            scrapeHouseDetailFromNewTab(browser, urlHouseDetail, vetrina_field, advertising_field, houseList, index_cards)    
         return houseListByPage.append(houseList)    
     except Exception:
         traceback.print_exc()
@@ -192,7 +192,7 @@ def getFeaturesHouse(browser,
                         )
 
 
-def getNumberOrContatta(browser):
+def getNumberOrContatta(browser, index_cards):
     try:
         all_buttons_new_tab = browser.find_elements(By.CLASS_NAME, "index-module_icon-only__gkRU8")
         chiama_btn = [btn for btn in all_buttons_new_tab if btn.text == "Contatta"]
@@ -214,8 +214,14 @@ def getNumberOrContatta(browser):
                 time.sleep(4)
                 txtAreaContatta = browser.find_element(By.CLASS_NAME, 'index-module_weight-book__AVaSr')
                 txtAreaContatta.clear()
-                # TODO change testo we want to send 
-                testo = 'Scusa ho sbagliato'
+                name = browser.find_element(By.CLASS_NAME, "index-module_name__hRS5a").text
+                
+                testo = ''
+                if index_cards %2 == 0:
+                    testo =  f"Ciao {name if ('utente' or 'Utente') not in ' '+name else ','}{settings_message.MSG_INTRO_SALE_02_A_00}\n{settings_message.MSG_COPY_SALE_02_A01}\n{settings_message.MSG_COPY_SALE_02_A02}\n{settings_message.MSG_COPY_SALE_02_A03}\n\n{settings_message.MSG_COPY_SALE_02_A04}\n\n{settings_message.MSG_COPY_SALE_02_A05}\n{settings_message.MSG_COPY_SALE_02_A06}\n{settings_message.MSG_COPY_SALE_02_A07}\n{settings_message.MSG_COPY_SALE_02_A08}\n{settings_message.MSG_COPY_SALE_02_A09}\n{settings_message.MSG_COPY_SALE_02_A10}\n\n{settings_message.MSG_COPY_SALE_02_A11}"
+                else:
+                    testo =  f"{settings_message.MSG_INTRO_SALE_03_A00}\n{settings_message.MSG_COPY_SALE_03_A01}\n{settings_message.MSG_COPY_SALE_03_A02}\n{settings_message.MSG_COPY_SALE_03_A03}\n\n{settings_message.MSG_COPY_SALE_03_A04}\n{settings_message.MSG_COPY_SALE_03_A05}\n{settings_message.MSG_COPY_SALE_03_A06}\n{settings_message.MSG_COPY_SALE_03_A07}\n\n{settings_message.MSG_COPY_SALE_03_A08}\n{settings_message.MSG_COPY_SALE_03_A09}\n{settings_message.MSG_COPY_SALE_03_A10}\nSimone"
+
                 txtAreaContatta.send_keys(testo)
                 browser.find_element(By.CLASS_NAME, 'form-module_submitButton__HaEyv').click()
 
@@ -227,7 +233,7 @@ def getNumberOrContatta(browser):
         pass
 
 
-def scrapeHouseDetailFromNewTab(browser, url, vetrina_field, advertising_field, houseList):
+def scrapeHouseDetailFromNewTab(browser, url, vetrina_field, advertising_field, houseList, index_cards):
     pin_tab = openAndSaveNetTabPosition(browser, url)
     house = None
     title_scraped = 'Title Not Found'
