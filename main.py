@@ -44,6 +44,7 @@ if __name__ == '__main__':
             
             adv = 'RENT' if console.advertising == '1' else 'SALE'
             houseListByPage = scrollByPage(browser, 50, 0, adv)
+            
             if houseListByPage is not None:
                 if console.excel:
                     print('//TODO write on excel')

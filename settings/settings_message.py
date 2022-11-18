@@ -5,7 +5,8 @@
 
 
 # GOOGLE DRIVE LINKS
-PDR_EXAMPLE = "https://docs.google.com/presentation/d/116ha3ohMOdW44Pfj4VXoA4Q2ranINi9A/edit?usp=sharing"
+PDR_EXAMPLE_AIRBNB = "https://docs.google.com/presentation/d/116ha3ohMOdW44Pfj4VXoA4Q2ranINi9A/edit?usp=sharing"
+PDF_EXAMPLE_SALE_DOCUMENT_NECESSARY = "https://drive.google.com/file/d/1-OCkH4xB6azJoEpIxqtkLbDFXXTksKZP/view?usp=share_link"
 
 # PREFIXES NUMBERS
 
@@ -38,7 +39,7 @@ MSG_COPY_SALE_02_A01 = "So che non ce la fai più a sentire agenti che al telefo
 MSG_COPY_SALE_02_A02 = "-  'ho il cliente qualicìficato e pronto per casa tua...'"
 MSG_COPY_SALE_02_A03 = "-  'ho venduto 4 case nella tua stessa zona il mese scorso'"
 MSG_COPY_SALE_02_A04 = ".. e stai passando probabilmente ore della tua giornata a rispondere solamente al telefono, ed altrettante ore ad aprire casa tua a sconosciuti che non sai nemmeno se possono permettersela."
-MSG_COPY_SALE_02_A05 = "Puoi scaricare da questo link (->) ' Il metodo per vendere casa senza ansia' che contiene:"
+MSG_COPY_SALE_02_A05 = "Puoi scaricare da questo link ⬇️ 'Il metodo per vendere casa senza ansia' che contiene:"
 MSG_COPY_SALE_02_A06 = "- Analisi comparativa di Mercato"
 MSG_COPY_SALE_02_A07 = "- Le azioni che fanno vendere un Immobile"
 MSG_COPY_SALE_02_A08 = "- Documenti Necessari per Vendere Casa"
@@ -51,12 +52,12 @@ MSG_COPY_SALE_02_A11 = "A presto"
 
 MSG_INTRO_SALE_03_A00 = 'Ciao sono Simone Imbalzano ed ho delle importanti novità per te.'
 MSG_COPY_SALE_03_A01 = "5 anni fa ho venduto un appartamento che potevi comprare a 250.000€, lo scorso settembre è stato ri-venduto a 455.000€, pensa quanto può valere tra 5 anni?!"
-MSG_COPY_SALE_03_A02 = "Stiamo cavalcando un ottimo periodo per la vendita d'immobili ed è relativamente facile trovare un acquirente a MIlano. Ma quindi a cosa serve un agente immobiliare?"
+MSG_COPY_SALE_03_A02 = "Stiamo cavalcando un ottimo periodo per la vendita d'immobili ed è relativamente facile trovare un acquirente a Milano. Ma quindi a cosa serve un agente immobiliare?"
 MSG_COPY_SALE_03_A03 = "Rispondo a questa domanda fornendoti del Materiale Gratuito che potrai scaricare da questo link:"
 MSG_COPY_SALE_03_A04 = "All'interno troverai:"
-MSG_COPY_SALE_02_A05 = "- Analisi comparativa di Mercato"
-MSG_COPY_SALE_02_A06 = "- Le azioni che fanno vendere un Immobile"
-MSG_COPY_SALE_02_A07 = "- Documenti Necessari per Vendere Casa"
+MSG_COPY_SALE_03_A05 = "- Analisi comparativa di Mercato"
+MSG_COPY_SALE_03_A06 = "- Le azioni che fanno vendere un Immobile"
+MSG_COPY_SALE_03_A07 = "- Documenti Necessari per Vendere Casa"
 MSG_COPY_SALE_03_A08 = "Io dico sempre se un Agente Immobiliare serve a mettere un cartello ed un annuncio fatelo da soli. Visto che ha già ascoltato il mio consiglio... BE DIFFERENT"
 MSG_COPY_SALE_03_A09 = "Se desideri una consulenza strategica specifica per il tuo appartamento, sono a disposizione per una chiacchierata di 15 minuti, senza vincoli."
 MSG_COPY_SALE_03_A10 = "A presto"

@@ -41,7 +41,7 @@ def send_message(data_immobile_list_by_page):
                 response = req.insert_house_request(data_immobile_list_by_page[index_page][index_house])
 
                 if response.status_code != 400 and response.status_code != 404:
-                    msg_from_settings_message = data_immobile_list_by_page[index_page][index_house].number +'\n'+ settings_message.MSG_INTRO_RENT_01 + data_immobile_list_by_page[index_page][index_house].url + settings_message.MSG_PROPOSAL_RENT_01 + settings_message.PDR_EXAMPLE + settings_message.MSG_TIME_APPOINTMENT_02
+                    msg_from_settings_message = data_immobile_list_by_page[index_page][index_house].number +'\n'+ settings_message.MSG_INTRO_RENT_01 + data_immobile_list_by_page[index_page][index_house].url + settings_message.MSG_PROPOSAL_RENT_01 + settings_message.PDR_EXAMPLE_AIRBNB + settings_message.MSG_TIME_APPOINTMENT_02
                     
                     number_msg_and_cont_test(cont_test, number_test)
 

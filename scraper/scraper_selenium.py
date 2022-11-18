@@ -18,7 +18,7 @@ linksNotFound = []
 numberNotFound = []
 house = None;
 houseListByPage = []
-
+counter_msg_AorB = 0
 
 
 
@@ -107,7 +107,7 @@ def scrapingFromUrl(browser, index_page, index_start_num_cards, houseList, adver
             urlHouseDetail = all_links_cards[index_cards].get_attribute('href')
         
             print('[DEBUG] card url: '+ str(urlHouseDetail))
-            scrapeHouseDetailFromNewTab(browser, urlHouseDetail, vetrina_field, advertising_field, houseList, index_cards)    
+            scrapeHouseDetailFromNewTab(browser, urlHouseDetail, vetrina_field, advertising_field, houseList)    
         return houseListByPage.append(houseList)    
     except Exception:
         traceback.print_exc()
@@ -192,7 +192,7 @@ def getFeaturesHouse(browser,
                         )
 
 
-def getNumberOrContatta(browser, index_cards):
+def getNumberOrContatta(browser):
     try:
         all_buttons_new_tab = browser.find_elements(By.CLASS_NAME, "index-module_icon-only__gkRU8")
         chiama_btn = [btn for btn in all_buttons_new_tab if btn.text == "Contatta"]
@@ -217,13 +217,16 @@ def getNumberOrContatta(browser, index_cards):
                 name = browser.find_element(By.CLASS_NAME, "index-module_name__hRS5a").text
                 
                 testo = ''
-                if index_cards %2 == 0:
-                    testo =  f"Ciao {name if ('utente' or 'Utente') not in ' '+name else ','}{settings_message.MSG_INTRO_SALE_02_A_00}\n{settings_message.MSG_COPY_SALE_02_A01}\n{settings_message.MSG_COPY_SALE_02_A02}\n{settings_message.MSG_COPY_SALE_02_A03}\n\n{settings_message.MSG_COPY_SALE_02_A04}\n\n{settings_message.MSG_COPY_SALE_02_A05}\n{settings_message.MSG_COPY_SALE_02_A06}\n{settings_message.MSG_COPY_SALE_02_A07}\n{settings_message.MSG_COPY_SALE_02_A08}\n{settings_message.MSG_COPY_SALE_02_A09}\n{settings_message.MSG_COPY_SALE_02_A10}\n\n{settings_message.MSG_COPY_SALE_02_A11}"
+                if counter_msg_AorB %2 == 0:
+                    testo =  'Ciao'+ ( ' '+name+', ' if ('utente' or 'Utente') not in name else ', ') +settings_message.MSG_INTRO_SALE_02_A_00+'\n\n'+settings_message.MSG_COPY_SALE_02_A01+'\n'+settings_message.MSG_COPY_SALE_02_A02+'\n'+settings_message.MSG_COPY_SALE_02_A03+'\n\n'+settings_message.MSG_COPY_SALE_02_A04+'\n\n'+settings_message.MSG_COPY_SALE_02_A05+'\n'+settings_message.PDF_EXAMPLE_SALE_DOCUMENT_NECESSARY+'\n'+settings_message.MSG_COPY_SALE_02_A06+'\n'+settings_message.MSG_COPY_SALE_02_A07+'\n'+settings_message.MSG_COPY_SALE_02_A08+'\n'+settings_message.MSG_COPY_SALE_02_A09+'\n'+settings_message.MSG_COPY_SALE_02_A10+'\n\n'+settings_message.MSG_COPY_SALE_02_A11
+                    counter_msg_AorB += 1
                 else:
-                    testo =  f"{settings_message.MSG_INTRO_SALE_03_A00}\n{settings_message.MSG_COPY_SALE_03_A01}\n{settings_message.MSG_COPY_SALE_03_A02}\n{settings_message.MSG_COPY_SALE_03_A03}\n\n{settings_message.MSG_COPY_SALE_03_A04}\n{settings_message.MSG_COPY_SALE_03_A05}\n{settings_message.MSG_COPY_SALE_03_A06}\n{settings_message.MSG_COPY_SALE_03_A07}\n\n{settings_message.MSG_COPY_SALE_03_A08}\n{settings_message.MSG_COPY_SALE_03_A09}\n{settings_message.MSG_COPY_SALE_03_A10}\nSimone"
+                    testo =  settings_message.MSG_INTRO_SALE_03_A00+'\n'+settings_message.MSG_COPY_SALE_03_A01+'\n'+settings_message.MSG_COPY_SALE_03_A02+'\n'+settings_message.MSG_COPY_SALE_03_A03+'\n\n'+settings_message.PDF_EXAMPLE_SALE_DOCUMENT_NECESSARY+'\n\n'+settings_message.MSG_COPY_SALE_03_A04+'\n'+settings_message.MSG_COPY_SALE_03_A05+'\n'+settings_message.MSG_COPY_SALE_03_A06+'\n'+settings_message.MSG_COPY_SALE_03_A07+'\n\n'+settings_message.MSG_COPY_SALE_03_A08+'\n'+settings_message.MSG_COPY_SALE_03_A09+'\n'+settings_message.MSG_COPY_SALE_03_A10+'\nSimone'
+                    counter_msg_AorB += 1
 
                 txtAreaContatta.send_keys(testo)
-                browser.find_element(By.CLASS_NAME, 'form-module_submitButton__HaEyv').click()
+                #TODO uncomment when tests are done
+                # browser.find_element(By.CLASS_NAME, 'form-module_submitButton__HaEyv').click()
 
                 time.sleep(2)
             return 0
@@ -233,7 +236,7 @@ def getNumberOrContatta(browser, index_cards):
         pass
 
 
-def scrapeHouseDetailFromNewTab(browser, url, vetrina_field, advertising_field, houseList, index_cards):
+def scrapeHouseDetailFromNewTab(browser, url, vetrina_field, advertising_field, houseList):
     pin_tab = openAndSaveNetTabPosition(browser, url)
     house = None
     title_scraped = 'Title Not Found'
@@ -242,8 +245,12 @@ def scrapeHouseDetailFromNewTab(browser, url, vetrina_field, advertising_field, 
         if number_scraped == 0 or number_scraped == None:
             number_scraped = '404-' + str(random.randrange(999, 999999))
 
-        title_scraped = browser.find_element(By.CLASS_NAME, "AdInfo_ad-info__title__7jXnY").text
-        title_scraped = getIfNOTSPECIFIEDfield(title_scraped)
+        try:
+            title_scraped = browser.find_element(By.CLASS_NAME, "AdInfo_ad-info__title__7jXnY").text
+            title_scraped = getIfNOTSPECIFIEDfield(title_scraped)
+        except Exception:
+            print = 'x'
+        
 
         price_scraped = browser.find_element(By.CLASS_NAME, "index-module_large__SUacX").text
         price_scraped = getIfNOTSPECIFIEDfield(price_scraped)
