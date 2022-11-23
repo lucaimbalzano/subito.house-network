@@ -50,6 +50,24 @@ class ChronoMeter():
         print(f"[ SECONDS {self.get_execution_time()/1000} s ]")
         print(f"[ MINUTES {(self.get_execution_time()/1000)/60} m ]")
 
+
+    """
+    Method that return the current time in 
+    seconds
+    """
+    def current_seconds_time(self):
+         return round(self.get_execution_time()/ 1000)
+
+
+    """
+    Method that return the current time in 
+    minutes
+    """
+
+    def current_minutes_time(self):
+        return round((self.get_execution_time()/1000)/60)
+
+
     """
     Method that return the current time in 
     milliseconds

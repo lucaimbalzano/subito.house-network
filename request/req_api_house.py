@@ -29,7 +29,7 @@ def print_responsetext(response,status_code, request_type):
     print(' ')
 
 def insert_house_request(house_dto):
-    uri = settings.BASE_URI + settings.PORT + settings.POST_SUBITO_REQ
+    uri = settings.BASE_URI + settings.PORT + settings.CRUD_HOUSE_REQ
     house_req_dto = HouseRequestDTO(house_dto.name,house_dto.price,house_dto.space,house_dto.rooms,house_dto.floor,house_dto.description,house_dto.title,house_dto.url,house_dto.number,house_dto.vetrina,house_dto.advertising,house_dto.bathrooms, house_dto.parking, house_dto.energyClass, house_dto.energyHeating, house_dto.urlUserProfile, house_dto.location)
     house_req_dto = json.dumps(house_req_dto.__dict__, indent=4)
     

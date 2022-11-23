@@ -13,17 +13,22 @@ GET_SUBITO_REQ = '/api/house/'
 
 
 # HOUSE
-
 GET_SUBITO_CHECK_REQ = '/api/house/check/'
-
-# /api/house/check/advertising/3311011258/RENT
 GET_SUBITO_CHECK_ADV_BY_NUMBER_REQ = '/check/advertising/' 
+CRUD_HOUSE_REQ = '/api/house/'
 
-POST_SUBITO_REQ = '/api/house/'
-
-PUT_SUBITO_REQ = '/api/house/6/'
 
 # MESSAGE
-
 POST_MSG = '/api/messages/'
+
+
+# PROCESSES
+    #TRACK
+CRUD_TRACK = '/api/track/'
+LAST_TRACK = '/api/track/last'
+
+    #STATE MACHINE
+CRUD_STATE = '/api/state/'
+LAST_STATE = '/api/state/last'
+
 
