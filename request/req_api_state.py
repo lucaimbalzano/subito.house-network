@@ -19,7 +19,7 @@ def print_responseNoIndent(response,status_code, request_type):
 def insert_state_machine_process(state_process_machine):
     uri = settings.BASE_URI + settings.PORT + settings.CRUD_STATE
     state_machine_process_req = json.dumps(state_process_machine.__dict__, indent=4)
-    
+    response = None
     try:
         headers = {'Content-type': 'application/json'}
         response = requests.post(uri, data=state_machine_process_req,headers=headers)
@@ -27,13 +27,14 @@ def insert_state_machine_process(state_process_machine):
         print('[STACKTRACE] POST::REQ_API_SUBITO_MESSAGE: ' + str(e))
         pass
 
-    print_responseNoIndent(response, str(response.status_code), 'POST')
+    if response.status_code == 400 or response.status_code == 500:
+        print_responseNoIndent(response, str(response.status_code), 'POST')
     return response    
 
 def update_state_machine_process(state_machine_process):
     uri = settings.BASE_URI + settings.PORT + settings.CRUD_STATE + str(state_machine_process.id_state_machine)
     state_machine_process_req = json.dumps(state_machine_process.__dict__, indent=4)
-    
+    response = None
     try:
         headers = {'Content-type': 'application/json'}
         response = requests.put(uri, data=state_machine_process_req,headers=headers)
@@ -41,12 +42,13 @@ def update_state_machine_process(state_machine_process):
         print('[STACKTRACE] PUT::REQ_API_SUBITO_MESSAGE: ' + str(e))
         pass
 
-    print_responseNoIndent(response, str(response.status_code), 'PUT')
+    if response.status_code == 400 or response.status_code == 500:
+        print_responseNoIndent(response, str(response.status_code), 'PUT')
     return response   
 
 def get_id_of_last_state_machine_process():
     uri = settings.BASE_URI + settings.PORT + settings.LAST_STATE
-    
+    response = None
     try:
         headers = {'Content-type': 'application/json'}
         response = requests.get(uri)
@@ -57,18 +59,20 @@ def get_id_of_last_state_machine_process():
     temp = re.findall(r'\d+', reponseDecodedUtf8)
     response_cleaned = list(map(int, temp))
 
-    print_responseNoIndent('NO', str(response.status_code),'GET')
+    if response.status_code == 400 or response.status_code == 500:
+        print_responseNoIndent('NO', str(response.status_code),'GET')
     return response_cleaned[0]
 
 def get_state_machine_process_by_id(id):
     uri = settings.BASE_URI + settings.PORT + settings.CRUD_STATE + str(id)
-    
+    response = None
     try:
         headers = {'Content-type': 'application/json'}
         response = requests.get(uri)
     except Exception as e:
         print('[STACKTRACE] GET::REQ_API_SUBITO_MESSAGE: ' + str(e))
     
-    print_responseNoIndent('NO', str(response.status_code),'GET')
+    if response.status_code == 400 or response.status_code == 500:
+        print_responseNoIndent('NO', str(response.status_code),'GET')
     return response.content
 

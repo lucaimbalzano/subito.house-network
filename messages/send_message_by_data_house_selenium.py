@@ -67,15 +67,17 @@ def getOptionsWhatsappDriver():
 
 
 def getMessageBasedFromADV(adv, data_immobile):
+    global counterMsgAorB
     br = (Keys.SHIFT)+(Keys.SHIFT)
     if adv == 'RENT':
          return f"{settings_message.MSG_INTRO_RENT_01}%0A{data_immobile.url}%0A%0A{settings_message.MSG_PROPOSAL_RENT_01}%0A%0A{settings_message.PDR_EXAMPLE_AIRBNB}%0A%20%0A{settings_message.MSG_TIME_APPOINTMENT_RENT_02}"
     else:
         if counterMsgAorB %2 == 0:
-            return f"Ciao{' '+data_immobile.name+', ' if ('utente' or 'Utente') not in data_immobile.name else ', '}{settings_message.MSG_INTRO_SALE_02_A_00}%0A{settings_message.MSG_COPY_SALE_02_A01}%0A{settings_message.MSG_COPY_SALE_02_A02}%0A{settings_message.MSG_COPY_SALE_02_A03}%0A%0A{settings_message.MSG_COPY_SALE_02_A04}%0A%0A{settings_message.MSG_COPY_SALE_02_A05}%0A%0A{settings_message.PDF_EXAMPLE_SALE_DOCUMENT_NECESSARY}%0A%0A{settings_message.MSG_COPY_SALE_02_A06}%0A{settings_message.MSG_COPY_SALE_02_A07}%0A%0A{settings_message.MSG_COPY_SALE_02_A08}%0A{settings_message.MSG_COPY_SALE_02_A09}%0A{settings_message.MSG_COPY_SALE_02_A10}"
+            return f"Ciao{' '+data_immobile.name+', ' if ('utente' or 'Utente') not in data_immobile.name else ', '}{settings_message.MSG_INTRO_SALE_02_A_00}%0A%0A{settings_message.MSG_COPY_SALE_02_A01}%0A{settings_message.MSG_COPY_SALE_02_A02}%0A{settings_message.MSG_COPY_SALE_02_A03}%0A%0A{settings_message.MSG_COPY_SALE_02_A04}%0A%0A{settings_message.MSG_COPY_SALE_02_A05}%0A{settings_message.MSG_COPY_SALE_02_A06}%0A{settings_message.MSG_COPY_SALE_02_A07}%0A%0A{settings_message.MSG_COPY_SALE_02_A09}%0A{settings_message.FOLDER_DOCS_FREE_CONTENT}%0A%0A{settings_message.MSG_COPY_SALE_02_A10}%0ASimone"
         else:
-            return  f"{settings_message.MSG_INTRO_SALE_03_A00}%0A{settings_message.MSG_COPY_SALE_03_A01}%0A{settings_message.MSG_COPY_SALE_03_A02}%0A{settings_message.MSG_COPY_SALE_03_A03}%0A%0A{settings_message.PDF_EXAMPLE_SALE_DOCUMENT_NECESSARY}%0A%0A{settings_message.MSG_COPY_SALE_03_A04}%0A{settings_message.MSG_COPY_SALE_03_A05}%0A{settings_message.MSG_COPY_SALE_03_A06}%0A{settings_message.MSG_COPY_SALE_03_A07}%0A%0A{settings_message.MSG_COPY_SALE_03_A08}%0A{settings_message.MSG_COPY_SALE_03_A09}%0A{settings_message.MSG_COPY_SALE_03_A10}%0ASimone"
-         
+            return  f"{settings_message.MSG_INTRO_SALE_03_A00}%0A%0A{settings_message.MSG_COPY_SALE_03_A01}%0A%0A{settings_message.MSG_COPY_SALE_03_A02}%0A{settings_message.MSG_COPY_SALE_03_A02_A}%0A%0A{settings_message.MSG_COPY_SALE_03_A03}%0A{settings_message.FOLDER_DOCS_FREE_CONTENT}%0A%0A{settings_message.MSG_COPY_SALE_03_A04}%0A{settings_message.MSG_COPY_SALE_03_A05}%0A{settings_message.MSG_COPY_SALE_03_A06}%0A%0A{settings_message.MSG_COPY_SALE_03_A08}%0A%0A{settings_message.MSG_COPY_SALE_03_A09}%0A%0A{settings_message.MSG_COPY_SALE_03_A10}%0ASimone"
+ 
+
 
 
 def response_msg_checker(response_msg):
@@ -97,6 +99,7 @@ def send_message_whatsapp(data_immobile_list_by_page):
     tot_count_msg_in_error = 0
     check_tot_for_api_msg = 0
     total_messages_sent = 0
+    global counterMsgAorB
     
     try:
         for index_page in range(0, len(data_immobile_list_by_page)):
@@ -116,6 +119,7 @@ def send_message_whatsapp(data_immobile_list_by_page):
                             #TESTPURPOSE
                             # data_immobile_list_by_page[index_page][index_house].number = '3474149281'
                             msg_from_settings_message = getMessageBasedFromADV(data_immobile_list_by_page[index_page][index_house].advertising,data_immobile_list_by_page[index_page][index_house])
+
 
                         try:
                             url = 'https://web.whatsapp.com/send?phone=' + '+39'+data_immobile_list_by_page[index_page][index_house].number + '&text=' + msg_from_settings_message

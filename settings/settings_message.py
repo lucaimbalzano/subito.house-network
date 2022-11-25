@@ -7,7 +7,7 @@
 # GOOGLE DRIVE LINKS
 PDR_EXAMPLE_AIRBNB = "https://docs.google.com/presentation/d/116ha3ohMOdW44Pfj4VXoA4Q2ranINi9A/edit?usp=sharing"
 PDF_EXAMPLE_SALE_DOCUMENT_NECESSARY = "https://drive.google.com/file/d/1-OCkH4xB6azJoEpIxqtkLbDFXXTksKZP/view?usp=share_link"
-
+FOLDER_DOCS_FREE_CONTENT = "https://drive.google.com/drive/folders/1jXkFn3h5mb6aC7JUY00SFNQeuii3a6Yr?usp=share_link"
 # PREFIXES NUMBERS
 
 PREFIX_ITA = '+39'
@@ -39,19 +39,20 @@ MSG_COPY_SALE_02_A01 = "So che non ce la fai più a sentire agenti che al telefo
 MSG_COPY_SALE_02_A02 = "-  'ho il cliente qualicificato e pronto per casa tua...'"
 MSG_COPY_SALE_02_A03 = "-  'ho venduto 4 case nella tua stessa zona il mese scorso'"
 MSG_COPY_SALE_02_A04 = ".. e stai passando probabilmente ore della tua giornata a rispondere solamente al telefono, ed altrettante ore ad aprire casa tua a sconosciuti che non sai nemmeno se possono permettersela."
-MSG_COPY_SALE_02_A05 = "Dopo 6 anni di esperienza ci sono due fondamentali cose da sapere: ⬇️"
+MSG_COPY_SALE_02_A05 = "Dopo 6 anni di esperienza ci sono due fondamentali cose da sapere:"
 MSG_COPY_SALE_02_A06 = "- quant'è il MASSIMO prezzo che puoi realizzare"
 MSG_COPY_SALE_02_A07 = "- e sapere se hai tutti i documenti in regola"
 MSG_COPY_SALE_02_A08 = "- Documenti Necessari per Vendere Casa"
-MSG_COPY_SALE_02_A09 = "Scarica GRATIS i due documenti che ho preparato per te"
+MSG_COPY_SALE_02_A09 = "Scarica GRATIS i due documenti che ho preparato per te:"
 MSG_COPY_SALE_02_A10 = "A presto"
 
 
-
+#  ⬇️
 
 MSG_INTRO_SALE_03_A00 = 'Ciao sono Simone Imbalzano ed ho delle importanti novità per te.'
 MSG_COPY_SALE_03_A01 = "5 anni fa ho venduto un appartamento che potevi comprare a 250.000€, lo scorso settembre è stato ri-venduto a 455.000€, pensa quanto può valere tra 5 anni?!"
-MSG_COPY_SALE_03_A02 = "Stiamo cavalcando un ottimo periodo per la vendita d'immobili ed è relativamente facile trovare un acquirente a Milano. Ma quindi a cosa serve un agente immobiliare?"
+MSG_COPY_SALE_03_A02 = "Stiamo cavalcando un ottimo periodo per la vendita d'immobili ed è relativamente facile trovare un acquirente a Milano."
+MSG_COPY_SALE_03_A02_A = "Ma quindi a cosa serve un agente immobiliare?"
 MSG_COPY_SALE_03_A03 = "Rispondo a questa domanda fornendoti del Materiale Gratuito che potrai scaricare da questo link:"
 MSG_COPY_SALE_03_A04 = "All'interno troverai:"
 MSG_COPY_SALE_03_A05 = "- quant'è il MASSIMO prezzo che puoi realizzare"

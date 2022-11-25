@@ -54,7 +54,6 @@ if __name__ == '__main__':
             
             adv = 'RENT' if console.advertising == '1' else 'SALE'
             houseListByPage = scrollByPage(browser, 50, 0, adv)
-            
             if houseListByPage is not None:
                 if console.excel:
                     print('//TODO write on excel')
@@ -71,7 +70,8 @@ if __name__ == '__main__':
         pass
     
     
-    finish_state_machine_track(chrono.current_seconds_time, chrono.current_minutes_time)
+    # TODO json not serializable when i update track_process
+    # finish_state_machine_track(chrono.current_seconds_time, chrono.current_minutes_time)
     print('V001::SUBITO.HOUSE-NETWORK - ENDED')
     chrono.stop_chrono()
     chrono.print_time()

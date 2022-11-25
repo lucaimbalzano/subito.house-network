@@ -8,6 +8,7 @@ import time
 import traceback
 import random
 
+
 import request.req_api_track as req_api_track
 
 from selenium.common.exceptions import NoSuchElementException
@@ -21,6 +22,7 @@ numberNotFound = []
 house = None;
 houseListByPage = []
 counter_msg_AorB = 0
+count_vetrina = 0
 last_track_process = req_api_track.get_track_process_by_id(req_api_track.get_id_of_last_track_process())
 
 
@@ -102,17 +104,22 @@ def scrapingFromUrl(browser, index_page, index_start_num_cards, houseList, adver
         return 0
    
     try:
-        
+        global count_vetrina
         for index_cards in range(index_start_num_cards, len(all_links_cards)):
             print("[DEBUG] retrieving data from card " + str(index_cards))
-            req_api_track.update_cards_by_track_process(last_track_process, str(index_cards))
+            req_api_track.update_cards_by_track_process(last_track_process, str(index_cards), str(index_page))
         
             advertising_field = advertising_from_input
             vetrina_field = getVetrinaByCard(all_links_cards, index_cards)
             urlHouseDetail = all_links_cards[index_cards].get_attribute('href')
-        
+            
             print('[DEBUG] card url: '+ str(urlHouseDetail))
-            scrapeHouseDetailFromNewTab(browser, urlHouseDetail, vetrina_field, advertising_field, houseList)    
+            if vetrina_field and count_vetrina <= 2:
+                count_vetrina += 1
+                scrapeHouseDetailFromNewTab(browser, urlHouseDetail, vetrina_field, advertising_field, houseList)    
+            elif vetrina_field == False:
+                scrapeHouseDetailFromNewTab(browser, urlHouseDetail, vetrina_field, advertising_field, houseList)    
+
         return houseListByPage.append(houseList)    
     except Exception as e:
         traceback.print_exc()
@@ -215,31 +222,30 @@ def getNumberOrContatta(browser):
                 numberNotFound.append(linkForNewTab)
                 return 0
         else:
-            if len(chiama_btn) > 0 :
-                chiama_btn[0].click()
-                time.sleep(4)
-                txtAreaContatta = browser.find_element(By.CLASS_NAME, 'index-module_weight-book__AVaSr')
-                txtAreaContatta.clear()
-                name = browser.find_element(By.CLASS_NAME, "index-module_name__hRS5a").text
+            # if len(chiama_btn) > 0 :
+            #     chiama_btn[0].click()
+            #     time.sleep(4)
+            #     txtAreaContatta = browser.find_element(By.CLASS_NAME, 'index-module_weight-book__AVaSr')
+            #     txtAreaContatta.clear()
+            #     name = browser.find_element(By.CLASS_NAME, "index-module_name__hRS5a").text
                 
-                testo = ''
-                if counter_msg_AorB %2 == 0:
-                    testo =  'Ciao'+ ( ' '+name+', ' if ('utente' or 'Utente') not in name else ', ') +settings_message.MSG_INTRO_SALE_02_A_00+'\n\n'+settings_message.MSG_COPY_SALE_02_A01+'\n'+settings_message.MSG_COPY_SALE_02_A02+'\n'+settings_message.MSG_COPY_SALE_02_A03+'\n\n'+settings_message.MSG_COPY_SALE_02_A04+'\n\n'+settings_message.MSG_COPY_SALE_02_A05+'\n'+settings_message.PDF_EXAMPLE_SALE_DOCUMENT_NECESSARY+'\n'+settings_message.MSG_COPY_SALE_02_A06+'\n'+settings_message.MSG_COPY_SALE_02_A07+'\n'+settings_message.MSG_COPY_SALE_02_A08+'\n'+settings_message.MSG_COPY_SALE_02_A09+'\n'+settings_message.MSG_COPY_SALE_02_A10
-                    counter_msg_AorB += 1
-                else:
-                    testo =  settings_message.MSG_INTRO_SALE_03_A00+'\n'+settings_message.MSG_COPY_SALE_03_A01+'\n'+settings_message.MSG_COPY_SALE_03_A02+'\n'+settings_message.MSG_COPY_SALE_03_A03+'\n\n'+settings_message.PDF_EXAMPLE_SALE_DOCUMENT_NECESSARY+'\n\n'+settings_message.MSG_COPY_SALE_03_A04+'\n'+settings_message.MSG_COPY_SALE_03_A05+'\n'+settings_message.MSG_COPY_SALE_03_A06+'\n'+settings_message.MSG_COPY_SALE_03_A07+'\n\n'+settings_message.MSG_COPY_SALE_03_A08+'\n'+settings_message.MSG_COPY_SALE_03_A09+'\n'+settings_message.MSG_COPY_SALE_03_A10+'\nSimone'
-                    counter_msg_AorB += 1
+            #     testo = ''
+            #     if counter_msg_AorB %2 == 0:
+            #         testo =  'Ciao'+ ( ' '+name+', ' if ('utente' or 'Utente') not in name else ', ') +settings_message.MSG_INTRO_SALE_02_A_00+'\n\n'+settings_message.MSG_COPY_SALE_02_A01+'\n'+settings_message.MSG_COPY_SALE_02_A02+'\n'+settings_message.MSG_COPY_SALE_02_A03+'\n\n'+settings_message.MSG_COPY_SALE_02_A04+'\n\n'+settings_message.MSG_COPY_SALE_02_A05+settings_message.MSG_COPY_SALE_02_A06+'\n'+settings_message.MSG_COPY_SALE_02_A07+'\n'+settings_message.MSG_COPY_SALE_02_A08+'\n\n'+settings_message.MSG_COPY_SALE_02_A09+'\n'+settings_message.FOLDER_DOCS_FREE_CONTENT+'\n\n'+settings_message.MSG_COPY_SALE_02_A10+'\nSimone'
+            #         counter_msg_AorB += 1
+            #     else:
+            #         testo =  settings_message.MSG_INTRO_SALE_03_A00+'\n\n'+settings_message.MSG_COPY_SALE_03_A01+'\n\n'+settings_message.MSG_COPY_SALE_03_A02+'\n'+settings_message.MSG_COPY_SALE_03_A02_A+'\n\n'+settings_message.MSG_COPY_SALE_03_A03+'\n'+settings_message.FOLDER_DOCS_FREE_CONTENT+'\n\n'+settings_message.MSG_COPY_SALE_03_A04+'\n'+settings_message.MSG_COPY_SALE_03_A05+'\n'+settings_message.MSG_COPY_SALE_03_A06+'\n\n'+settings_message.MSG_COPY_SALE_03_A08+'\n\n'+settings_message.MSG_COPY_SALE_03_A09+'\n\n'+settings_message.MSG_COPY_SALE_03_A10+'\nSimone'
+            #         counter_msg_AorB += 1
 
-                txtAreaContatta.send_keys(testo)
-                #TODO uncomment when tests are done
-                # browser.find_element(By.CLASS_NAME, 'form-module_submitButton__HaEyv').click()
+            #     txtAreaContatta.send_keys(testo)
+            #     browser.find_element(By.CLASS_NAME, 'form-module_submitButton__HaEyv').click()
 
-                time.sleep(2)
+            #     time.sleep(2)
             return 0
     except Exception as e:
         print('[ERROR] Error occurred during scraping number: ' + str(e))
         traceback.print_exc()
-        req_api_track.update_errorStack_by_track_process(last_track_process, e)
+        # req_api_track.update_errorStack_by_track_process(last_track_process, e)
         pass
 
 
@@ -287,11 +293,11 @@ def scrapeHouseDetailFromNewTab(browser, url, vetrina_field, advertising_field, 
     except Exception as e:
         print('--- Error occurred: ' + str(e))
         traceback.print_exc()
-        req_api_track.update_errorStack_by_track_process(last_track_process, e)
+        # req_api_track.update_errorStack_by_track_process(last_track_process, e)
         pass
     except NoSuchElementException as nsee:
         print('--- Error occurred, Title Apartment: ' + str(title_scraped) + '; URL: ' + str(url))
-        req_api_track.update_errorStack_by_track_process(last_track_process, nsee)
+        # req_api_track.update_errorStack_by_track_process(last_track_process, nsee)
         pass
 
     finally:
