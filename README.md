@@ -12,7 +12,12 @@ create virtual environment
 
 ```
 $ python3 -m venv env
+
+windows:
 $ .\env\Scripts\activate 
+linux:
+$source .\env\bin\activate
+
 ```
 or 
 ```
@@ -25,8 +30,10 @@ $ pipenv shell
 
 install all dependencies:
 ```
-$ pip install wheel
 $ pip install -r requirements.txt
+
+Linux add this dep called 'tkinter' to use Mouseinfo:
+sudo apt-get install python3-tk python3-dev
 ```
 
 
