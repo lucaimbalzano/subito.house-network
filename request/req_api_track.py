@@ -84,13 +84,15 @@ def get_id_of_last_track_process():
     reponseDecodedUtf8 = response.content.decode('utf-8')
     temp = re.findall(r'\d+', reponseDecodedUtf8)
     response_cleaned = list(map(int, temp))
+    if not response_cleaned:
+        return None
     if response.status_code == 400 or response.status_code == 500:
         print_responseNoIndent('NO', str(response.status_code),'GET')
     return response_cleaned[0]
 
 def get_track_process_by_id(id):
     uri = settings.BASE_URI + settings.PORT + settings.CRUD_TRACK + str(id)
-    response = None
+    response = None # TODO delete just a try
     try:
         headers = {'Content-type': 'application/json'}
         response = requests.get(uri)

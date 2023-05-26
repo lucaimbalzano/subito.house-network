@@ -8,13 +8,15 @@ import time
 import traceback
 import random
 
-
+from bs4 import BeautifulSoup
+import requests
 import request.req_api_track as req_api_track
-
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from request.dto.house_request_dto import HouseRequestDTO
+from scraper.exceptions.nosuchelement_house_feature import exception_NoSuchElementExeption_house_ByFieldFinder, exception_NoSuchElementExeption_house_ByFieldFinder_asList, exception_NoSuchElementExeption_house_ByFieldFinder_byGetAttribute
 from settings import settings, settings_message
+from settings.settings_subito_find_element import SUBITO_FEATURES_HOUSE_ID_NAME, SUBITO_PRICE_HOUSE_CLASS_NAME,SUBITO_NAME_USER_CLASS_NAME, SUBITO_DESC_HOUSE_CLASS_NAME, SUBITO_LOCATION_DISPLAYED_HOUSE_CLASS_NAME, SUBITO_FEATURES_HOUSE_CLASS_NAME,SUBITO_TITLE_HOUSE_CLASS_NAME, SUBITO_ENERGY_FEATURES_CLASS_NAME, SUBITO_USER_URL_PROFILE_CLASS_NAME
 
 linkForNewTab = ''
 linksNotFound = []
@@ -68,9 +70,7 @@ def openAndSaveNetTabPosition(browser, url):
 
 
 
-
-
-
+perno = False
 
 def scrollByPage(browser, num_pages_to_scroll, index_start_num_cards_to_scroll, adv):
     if adv == 'RENT':
@@ -79,6 +79,12 @@ def scrollByPage(browser, num_pages_to_scroll, index_start_num_cards_to_scroll, 
     else:
         browser.get(settings.BASE_LINK_SALE_HOUSE + str(1) + settings.TIPOLOGY_ADVERTISER_FILTER)
         time.sleep(1)
+    global perno
+    if perno != True:
+        perno = True
+        privacy_alert = browser.find_element(By.ID, 'didomi-notice-agree-button')
+        if privacy_alert != None:
+            browser.execute_script("arguments[0].click();", privacy_alert)
 
     for index_page in range(1, num_pages_to_scroll):
         print("[DEBUG] retrieving data from " + str(index_page) + " page =========================================================================")
@@ -113,6 +119,10 @@ def scrapingFromUrl(browser, index_page, index_start_num_cards, houseList, adver
             vetrina_field = getVetrinaByCard(all_links_cards, index_cards)
             urlHouseDetail = all_links_cards[index_cards].get_attribute('href')
             
+            # url_soap = requests.get(urlHouseDetail)
+            # soup = BeautifulSoup(url_soap, 'html.parser')
+            # print(soup.prettify)
+
             print('[DEBUG] card url: '+ str(urlHouseDetail))
             if vetrina_field and count_vetrina <= 2:
                 count_vetrina += 1
@@ -129,16 +139,16 @@ def scrapingFromUrl(browser, index_page, index_start_num_cards, houseList, adver
 
 
 def getFeaturesHouse(browser,
-                            location_scraped,
-                            house_features,
-                            name_scraped,
-                            price_scraped,
-                            description_scraped,
-                            title_scraped,
-                            url,
-                            number_scraped,
-                            vetrina_field,
-                            advertising_field):
+                        location_scraped,
+                        house_features,
+                        name_scraped,
+                        price_scraped,
+                        description_scraped,
+                        title_scraped,
+                        url,
+                        number_scraped,
+                        vetrina_field,
+                        advertising_field):
     
     energyHeating_scraped = 'NOT SPECIFIED'
     energyClass_scraped = 'NOT SPECIFIED'
@@ -150,58 +160,64 @@ def getFeaturesHouse(browser,
     parking_scraped = ''
     status_house_scraped = ''
 
+    if house_features == None:
+        house_features = '0'
     for index_field in range(0, len(house_features)):
-        field = house_features[index_field].text.split('\n')   
-        if field[0] == 'Stato':
-            status_house_scraped =  field[1] if field[1] != '-' else 'NOT SPECIFIED'
-        if field[0] == 'Superficie':
-            space_scraped =  field[1] if field[1] != '-' else 'NOT SPECIFIED'
-        if field[0] == 'Piano':
-            floor_scraped =  field[1] if field[1] != '-' else 'NOT SPECIFIED'
-        if field[0] == 'Locali':
-            rooms_scraped =  field[1] if field[1] != '-' else 'NOT SPECIFIED'
-        if field[0] == 'Bagni':
-            bathroom_scraped =  field[1] if field[1] != '-' else 'NOT SPECIFIED'
-        if field[0] == 'Parcheggio':
-            parking_scraped =  field[1] if field[1] != '-' else 'NOT SPECIFIED'
-        if field[0] == 'Classe energetica':
-            energyClass_scraped = field[1] if field[1] != '-' else 'NOT FOUND'
-        if field[0] == 'Riscaldamento':
-            energyHeating_scraped = field[1] if field[1] != '-' else 'NOT FOUND'
-
+        field = house_features[index_field]
+        if house_features[index_field] == 'Stato':
+            status_house_scraped =  house_features[index_field+1] if house_features[index_field+1] != '-' else 'NOT SPECIFIED'
+        if house_features[index_field]  == 'Superficie':
+            space_scraped =  house_features[index_field+1] if house_features[index_field+1] != '-' else 'NOT SPECIFIED'
+        if house_features[index_field]  == 'Piano':
+            floor_scraped =  house_features[index_field+1] if house_features[index_field+1] != '-' else 'NOT SPECIFIED'
+        if house_features[index_field]  == 'Locali':
+            rooms_scraped =  house_features[index_field+1] if house_features[index_field+1] != '-' else 'NOT SPECIFIED'
+        if house_features[index_field]  == 'Bagni':
+            bathroom_scraped =  house_features[index_field+1] if house_features[index_field+1] != '-' else 'NOT SPECIFIED'
+        if house_features[index_field]  == 'Parcheggio':
+            parking_scraped =  house_features[index_field+1] if house_features[index_field+1] != '-' else 'NOT SPECIFIED'
+        if house_features[index_field]  == 'Classe energetica':
+            energyClass_scraped = house_features[index_field+1] if house_features[index_field+1] != '-' else 'NOT SPECIFIED'
+        if house_features[index_field]  == 'Riscaldamento':
+            energyHeating_scraped = house_features[index_field+1] if house_features[index_field+1] != '-' else 'NOT SPECIFIED'
 
     try:
-        if energyHeating_scraped == 'NOT SPECIFIED' or energyClass_scraped == 'NOT SPECIFIED':
-            energy_features = browser.find_element(By.CLASS_NAME, "feature-list_list__UNF-4c").text.split('\n')
-            energyHeating_scraped = energy_features[1] if energy_features[1] != '-' else 'NOT SPECIFIED'
-            energyClass_scraped = energy_features[3] if energy_features[3] != '-' else 'NOT SPECIFIED'
-    except Exception as e:
-        # logger.error('[ERROR] energy features error occurred: not found')
-        sys.exc_clear()
-        pass
-    finally:
+        # if energyHeating_scraped == 'NOT SPECIFIED' or energyClass_scraped == 'NOT SPECIFIED':
+        #     energy_features = browser.find_element(By.CLASS_NAME, "feature-list_list__UNF-4c").text.split('\n')
+        #     energyHeating_scraped = energy_features[1] if energy_features[1] != '-' else 'NOT SPECIFIED'
+        #     energyClass_scraped = energy_features[3] if energy_features[3] != '-' else 'NOT SPECIFIED'
+                # TODO
         # elevator = browser.find_element(By.ID, 'feature-list-section_detail-chip-container__by96k').text.find('Asce') 
-        urlProfile_scraped = browser.find_element(By.CLASS_NAME, "index-module_rounded_user_badge__KC3zi").get_attribute('href')
-        urlProfile_scraped_clean = urlProfile_scraped if urlProfile_scraped != '-' else 'NOT SPECIFIED'
+        # balcony and other details
+        
+        urlProfile_scraped = exception_NoSuchElementExeption_house_ByFieldFinder_byGetAttribute(browser,By.CLASS_NAME,SUBITO_USER_URL_PROFILE_CLASS_NAME,'href')
+        if urlProfile_scraped is not None:
+            urlProfile_scraped_clean = urlProfile_scraped if urlProfile_scraped != '-' else 'NOT SPECIFIED'
+        
+    except NoSuchElementException as nsee:
+        print(nsee)
+        pass
+    
+        
 
-        return HouseRequestDTO(name_scraped, 
-                            price_scraped, 
-                            space_scraped, 
-                            rooms_scraped, 
-                            floor_scraped, 
-                            description_scraped, 
-                            title_scraped, 
-                            url, 
-                            number_scraped, 
-                            vetrina_field, 
-                            advertising_field,
-                            bathroom_scraped, 
-                            parking_scraped,
-                            energyClass_scraped,
-                            energyHeating_scraped,
-                            urlProfile_scraped_clean,
-                            location_scraped
-                        )
+    return HouseRequestDTO(name_scraped, 
+                        price_scraped, 
+                        space_scraped, 
+                        rooms_scraped, 
+                        floor_scraped, 
+                        description_scraped, 
+                        title_scraped, 
+                        url, 
+                        number_scraped, 
+                        vetrina_field, 
+                        advertising_field,
+                        bathroom_scraped, 
+                        parking_scraped,
+                        energyClass_scraped,
+                        energyHeating_scraped,
+                        urlProfile_scraped_clean,
+                        location_scraped
+                    )
 
 
 def getNumberOrContatta(browser):
@@ -251,58 +267,34 @@ def getNumberOrContatta(browser):
 
 def scrapeHouseDetailFromNewTab(browser, url, vetrina_field, advertising_field, houseList):
     pin_tab = openAndSaveNetTabPosition(browser, url)
-    house = None
-    title_scraped = 'Title Not Found'
-    try:
-        number_scraped = getNumberOrContatta(browser)
-        if number_scraped == 0 or number_scraped == None:
-            number_scraped = '404-' + str(random.randrange(999, 999999))
+      
+    number_scraped = getNumberOrContatta(browser)
+    if number_scraped == 0 or number_scraped == None:
+        number_scraped = '404-' + str(random.randrange(999, 999999))
 
-        try:
-            title_scraped = browser.find_element(By.CLASS_NAME, "AdInfo_ad-info__title__7jXnY").text
-            title_scraped = getIfNOTSPECIFIEDfield(title_scraped)
-        except Exception:
-            print = 'x'
-        
+    title_scraped = exception_NoSuchElementExeption_house_ByFieldFinder(browser, By.CLASS_NAME,SUBITO_TITLE_HOUSE_CLASS_NAME,1) if True else 'NOT SPECIFIED' 
+    price_scraped = exception_NoSuchElementExeption_house_ByFieldFinder(browser, By.CLASS_NAME ,SUBITO_PRICE_HOUSE_CLASS_NAME,1) if True else 'NOT SPECIFIED'
+    name_scraped = exception_NoSuchElementExeption_house_ByFieldFinder(browser, By.CLASS_NAME ,SUBITO_NAME_USER_CLASS_NAME,1) if True else 'NOT SPECIFIED'
+    description_scraped = exception_NoSuchElementExeption_house_ByFieldFinder(browser, By.CLASS_NAME ,SUBITO_DESC_HOUSE_CLASS_NAME,1) if True else 'NOT SPECIFIED'
+    location_scraped = exception_NoSuchElementExeption_house_ByFieldFinder(browser, By.CLASS_NAME ,SUBITO_LOCATION_DISPLAYED_HOUSE_CLASS_NAME,1)  if True else 'NOT SPECIFIED'
+    # house_features = exception_NoSuchElementExeption_house_ByFieldFinder_asList(browser, By.CLASS_NAME ,SUBITO_FEATURES_HOUSE_CLASS_NAME,0)  if True else 'NOT SPECIFIED'
+    house_features = exception_NoSuchElementExeption_house_ByFieldFinder_asList(browser, By.ID ,SUBITO_FEATURES_HOUSE_ID_NAME,1).split('\n')
+    # if True else 'NOT SPECIFIED'
 
-        price_scraped = browser.find_element(By.CLASS_NAME, "index-module_large__SUacX").text
-        price_scraped = getIfNOTSPECIFIEDfield(price_scraped)
+    house = getFeaturesHouse(browser,
+                            location_scraped,
+                            house_features,
+                            name_scraped,
+                            price_scraped,
+                            description_scraped,
+                            title_scraped,
+                            url,
+                            number_scraped,
+                            vetrina_field,
+                            advertising_field)
 
-        name_scraped = browser.find_element(By.CLASS_NAME, "index-module_name__hRS5a").text
-        name_scraped = getIfNOTSPECIFIEDfield(name_scraped)
+    if house is not None:
+        houseList.append(house)
 
-        description_scraped = browser.find_element(By.CLASS_NAME, "index-module_preserve-new-lines__ZOcGy").text
-        description_scraped = getIfNOTSPECIFIEDfield(description_scraped)
-
-        location_scraped = browser.find_element(By.CLASS_NAME, 'AdInfo_ad-info__location__text__ZBFdn').text
-        location_scraped = getIfNOTSPECIFIEDfield(location_scraped)
-
-        house_features = browser.find_elements(By.CLASS_NAME, "feature-list_feature__8a4rn")
-        house = getFeaturesHouse(browser,
-                                location_scraped,
-                                house_features,
-                                name_scraped,
-                                price_scraped,
-                                description_scraped,
-                                title_scraped,
-                                url,
-                                number_scraped,
-                                vetrina_field,
-                                advertising_field)
-        
-    except Exception as e:
-        print('--- Error occurred: ' + str(e))
-        traceback.print_exc()
-        # req_api_track.update_errorStack_by_track_process(last_track_process, e)
-        pass
-    except NoSuchElementException as nsee:
-        print('--- Error occurred, Title Apartment: ' + str(title_scraped) + '; URL: ' + str(url))
-        # req_api_track.update_errorStack_by_track_process(last_track_process, nsee)
-        pass
-
-    finally:
-        if house is not None:
-            houseList.append(house)
-
-        browser.close()
-        browser.switch_to.window(pin_tab)
+    browser.close()
+    browser.switch_to.window(pin_tab)

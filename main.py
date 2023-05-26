@@ -50,7 +50,7 @@ if __name__ == '__main__':
             pass
         else:
             browser = Browser.get_browser()
-            login(browser)
+            # login(browser)
             
             adv = 'RENT' if console.advertising == '1' else 'SALE'
             houseListByPage = scrollByPage(browser, 50, 0, adv)

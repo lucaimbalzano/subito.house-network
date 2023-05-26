@@ -6,6 +6,9 @@
 from selenium import webdriver
 from settings import settings
 
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
+
 
 
 def get_options():
@@ -20,7 +23,6 @@ class Browser:
 
     def get_browser():
         options = get_options()
-        browser = webdriver.Chrome(settings.PATH_CHROME_DRIVER, chrome_options=options)
+        # browser = webdriver.Chrome(executable_path=settings.PATH_CHROME_DRIVER, chrome_options=options)
+        browser = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
         return browser
-
-        

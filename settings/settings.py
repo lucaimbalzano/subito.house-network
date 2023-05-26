@@ -5,8 +5,11 @@
 
 
 #CHROMEDRIVER
+#Windows
 # PATH_CHROME_DRIVER = 'C:/Users/lucai/Documents/Utils/SW/WebDriver/106/0.5249.61/chromedriver.exe'
-PATH_CHROME_DRIVER = '/home/whngu/Documents/ProgramFiles/chromes-driver/chromedriver-109.0.5414.74'
+#Linux
+PATH_CHROME_DRIVER = '~/Documents/ProgramFiles/chromes-driver/chromedriver.109.0.5414.25'
+
 
 
 
