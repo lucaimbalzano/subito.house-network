@@ -4,7 +4,7 @@
 
 from json import JSONEncoder, JSONDecoder
 import json
-from request.dto.track_process_dto import TrackProcessRequestDTO
+from service.request.dto.track_process_dto import TrackProcessRequestDTO
 from types import SimpleNamespace
 
 

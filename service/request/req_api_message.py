@@ -6,9 +6,9 @@ import json
 import traceback
 
 import requests
-from request.dto.message_request_dto import MessageRequestDTO
+from service.request.dto.message_request_dto import MessageRequestDTO
 import settings.settings_api as settings
-from request.dto.house_request_dto import HouseRequestDTO, HouseRequestDTOEncoder
+from service.request.dto.house_request_dto import HouseRequestDTO, HouseRequestDTOEncoder
 import random
 
 

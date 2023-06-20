@@ -4,7 +4,7 @@
 
 
 import random
-from request.dto.house_request_dto import HouseRequestDTO
+from service.request.dto.house_request_dto import HouseRequestDTO
 
 
 

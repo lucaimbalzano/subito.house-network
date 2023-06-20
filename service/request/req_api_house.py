@@ -7,7 +7,7 @@ import traceback
 
 import requests
 import settings.settings_api as settings
-from request.dto.house_request_dto import HouseRequestDTO, HouseRequestDTOEncoder
+from service.request.dto.house_request_dto import HouseRequestDTO, HouseRequestDTOEncoder
 import random
 
 

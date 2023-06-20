@@ -4,15 +4,15 @@
 # - @lucaimbalzano
 
 from email import *
-from browser.browser import Browser
+from utils.browser.browser import Browser
 from messages import send_message_by_data_house
 from messages.send_message_by_data_house_selenium import send_message_whatsapp
-from request.req_api_state import get_id_of_last_state_machine_process, get_state_machine_process_by_id, insert_state_machine_process, update_state_machine_process
-from request.req_api_track import get_id_of_last_track_process, get_track_process_by_id, insert_track_process, update_track_process
-from response.res_api_state import get_state_object_from_json
-from response.res_api_subito_message_get_all import HousesListDTO, HousesListDTODecoder
-from response.res_api_track import TrackProcessListDTODecoder, get_track_object_from_json
-from scraper.scraper_selenium import *
+from service.request.req_api_state import get_id_of_last_state_machine_process, get_state_machine_process_by_id, insert_state_machine_process, update_state_machine_process
+from service.request.req_api_track import get_id_of_last_track_process, get_track_process_by_id, insert_track_process, update_track_process
+from service.response.res_api_state import get_state_object_from_json
+from service.response.res_api_subito_message_get_all import HousesListDTO, HousesListDTODecoder
+from service.response.res_api_track import TrackProcessListDTODecoder, get_track_object_from_json
+from service.scraper.scraper_selenium import *
 from tests.dto.console import Console, input_console
 from tests.dto.test_data_immobile import getHouseListPageTest
 from tests.state.state_tests import get_fake_state_machine

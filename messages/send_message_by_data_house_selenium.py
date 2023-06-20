@@ -12,10 +12,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.keys import Keys 
-from request import req_api_house  as req
-from request import req_api_message as req_msg
-from request.dto.house_request_dto import HouseRequestDTO
-from request.dto.message_request_dto import MessageRequestDTO
+from service.request import req_api_house  as req
+from service.request import req_api_message as req_msg
+from service.request.dto.house_request_dto import HouseRequestDTO
+from service.request.dto.message_request_dto import MessageRequestDTO
 from tests.messages.test_message import number_msg_and_cont_test
 from settings import settings_message
 from time import sleep

@@ -2,11 +2,11 @@
 
 
 
-from request.dto.state_machine_process_dto import StateMachineProcessRequestDTO
+from service.request.dto.machine_process_dto import MachineProcessRequestDTO
 
 
 
-# TESTS in main for StateMachineProcessRequestDTO
+# TESTS in main for MachineProcessRequestDTO
 # state_test = get_fake_state_machine()
 # res_post = insert_state_machine_process(state_test)
 # id_last_state = get_id_of_last_state_machine_process()
@@ -18,4 +18,4 @@ from request.dto.state_machine_process_dto import StateMachineProcessRequestDTO
 
 def get_fake_state_machine():
     #  id_state_machine, state, processId):?
-    return StateMachineProcessRequestDTO(None,'ACTIVE',3)
+    return MachineProcessRequestDTO(None,'ACTIVE',3)

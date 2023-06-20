@@ -10,13 +10,14 @@ import random
 
 from bs4 import BeautifulSoup
 import requests
-import request.req_api_track as req_api_track
+import service.request.req_api_track as req_api_track
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
-from request.dto.house_request_dto import HouseRequestDTO
-from scraper.exceptions.nosuchelement_house_feature import exception_NoSuchElementExeption_house_ByFieldFinder, exception_NoSuchElementExeption_house_ByFieldFinder_asList, exception_NoSuchElementExeption_house_ByFieldFinder_byGetAttribute
+from service.request.dto.house_request_dto import HouseRequestDTO
+from service.scraper.exceptions.nosuchelement_house_feature import exception_NoSuchElementExeption_house_ByFieldFinder, exception_NoSuchElementExeption_house_ByFieldFinder_asList, exception_NoSuchElementExeption_house_ByFieldFinder_byGetAttribute
 from settings import settings, settings_message
 from settings.settings_subito_find_element import SUBITO_FEATURES_HOUSE_ID_NAME, SUBITO_PRICE_HOUSE_CLASS_NAME,SUBITO_NAME_USER_CLASS_NAME, SUBITO_DESC_HOUSE_CLASS_NAME, SUBITO_LOCATION_DISPLAYED_HOUSE_CLASS_NAME, SUBITO_FEATURES_HOUSE_CLASS_NAME,SUBITO_TITLE_HOUSE_CLASS_NAME, SUBITO_ENERGY_FEATURES_CLASS_NAME, SUBITO_USER_URL_PROFILE_CLASS_NAME
+from service import house_service
 
 linkForNewTab = ''
 linksNotFound = []
@@ -294,6 +295,7 @@ def scrapeHouseDetailFromNewTab(browser, url, vetrina_field, advertising_field, 
                             advertising_field)
 
     if house is not None:
+        house_service(house)
         houseList.append(house)
 
     browser.close()
