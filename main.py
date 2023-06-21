@@ -27,7 +27,7 @@ import datetime as dt
 import time
 import test
 
-from utils.processes_statemachine_track import finish_state_machine_track, init_state_machine_track
+from utils.processes_state_machine_track import finish_state_machine_track, init_state_machine_track_process
 
 
 def getDataImmobile(link):
@@ -38,7 +38,7 @@ if __name__ == '__main__':
     chrono = ChronoMeter()
     chrono.start_chrono()
     print('V001::SUBITO.HOUSE-NETWORK     - STARTED')
-    init_state_machine_track()
+    init_state_machine_track_process()
     
     try:
     

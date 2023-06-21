@@ -6,6 +6,7 @@ import json
 import traceback
 import re
 import requests
+from service.request.dto.track_process_dto import TrackProcessRequestDTOEncoder
 from service.response.res_api_track import get_track_object_from_json
 import settings.settings_api as settings
 import random
@@ -20,9 +21,12 @@ def print_responseNoIndent(response,status_code, request_type):
     if response != 'NO':
         print('CONTENT: '+str(response.content))
 
+
+
 def insert_track_process(track_process):
     uri = settings.BASE_URI + settings.PORT + settings.CRUD_TRACK
-    track_process_req = json.dumps(track_process.__dict__, indent=4)
+    track_process_req = json.dumps(track_process, indent=4, cls=TrackProcessRequestDTOEncoder)
+
     response = None
     try:
         headers = {'Content-type': 'application/json'}

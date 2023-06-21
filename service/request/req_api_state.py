@@ -6,6 +6,7 @@ import json
 import traceback
 import re
 import requests
+from service.request.dto.machine_process_dto import MachineProcessRequestDTOEncoder
 import settings.settings_api as settings
 import random
 
@@ -18,7 +19,8 @@ def print_responseNoIndent(response,status_code, request_type):
 
 def insert_state_machine_process(state_process_machine):
     uri = settings.BASE_URI + settings.PORT + settings.CRUD_STATE
-    state_machine_process_req = json.dumps(state_process_machine.__dict__, indent=4)
+    state_machine_process_req = json.dumps(state_process_machine, indent=4, cls=MachineProcessRequestDTOEncoder)
+     
     response = None
     try:
         headers = {'Content-type': 'application/json'}
@@ -76,3 +78,6 @@ def get_state_machine_process_by_id(id):
         print_responseNoIndent('NO', str(response.status_code),'GET')
     return response.content
 
+
+
+## TimeMan

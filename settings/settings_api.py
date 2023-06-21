@@ -31,4 +31,7 @@ LAST_TRACK = '/api/track/last'
 CRUD_STATE = '/api/state/'
 LAST_STATE = '/api/state/last'
 
+    #TIME MANAGER
+CRUD_TIME_MANAGER = '/api/timemanager/'
+LAST_TIME_MANAGER = '/api/timemanager/last'
 

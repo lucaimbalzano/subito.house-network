@@ -4,11 +4,12 @@
 
 
 class MessageRequestDTO:
-  def __init__(self,messageId,dateSent,message,idHouseRequest, options):
+  def __init__(self,messageId,dateSent,dateTimeSent,message,house, options):
     self.messageId = messageId
     self.dateSent = dateSent
+    self.dateTimeSent = dateTimeSent
     self.message = message
-    self.idHouseRequest = idHouseRequest
+    self.house = house
     self.options = options
 
   def __setattr__(self, messageId, value: any) -> None:

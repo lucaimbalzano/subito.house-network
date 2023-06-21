@@ -3,17 +3,27 @@
 # - @lucaimbalzano
 
 
-class TrackProcessRequestDTO:
-  def __init__(self, identifierProcess, numPage, numCard, urlLastPage, urlLastCard, errorStack, options, machine):
-    self.identifierProcess = identifierProcess
-    self.numPage = numPage
-    self.numCard = numCard
-    self.urlLastPage = urlLastPage
-    self.urlLastCard = urlLastCard
-    self.options = options
-    self.machine = machine
-    self.errorStack = errorStack
-    
+from enum import Enum
+from service.request.dto.machine_process_dto import MachineProcessRequestDTO as Machine
+from service.request.dto.time_manager_request_dto import TimeManagerRequestDto as TimeManager
+from json import JSONEncoder
 
-  def __setattr__(self, identifierProcess, value: any) -> None:
-    super().__setattr__(identifierProcess, value)
+class TrackProcessRequestDTO:
+    def __init__(self, idProcess, numPage, numCard, urlLastPage, urlLastCard, options, errorStack, machine):
+        self.idProcess = idProcess
+        self.numPage = numPage
+        self.numCard = numCard
+        self.urlLastPage = urlLastPage
+        self.urlLastCard = urlLastCard
+        self.options = options
+        self.errorStack = errorStack
+        self.machine = machine
+        
+
+class TrackProcessRequestDTOEncoder(JSONEncoder):
+    def default(self, o):
+        if isinstance(o, (TrackProcessRequestDTO, Machine, TimeManager)):
+            return o.__dict__
+        if isinstance(o, Enum):
+            return o.value
+        return super().default(o)
