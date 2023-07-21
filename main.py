@@ -4,6 +4,7 @@
 # - @lucaimbalzano
 
 from email import *
+from utils.logs import logger as log
 from utils.browser.browser import Browser
 from messages import send_message_by_data_house
 from messages.send_message_by_data_house_selenium import send_message_whatsapp
@@ -30,13 +31,15 @@ from tests.track.track_tests import get_fake_track
 from utils.auxiliary_functions_excel import writeExcelByDataImmobile
 from utils.cronometer import ChronoMeter
 from utils.auxiliary_functions import *
+from utils.processes_state_machine_track import finish_state_machine_track, init_state_machine_track_process
 from settings import settings
 import json
 import traceback
 import datetime as dt
 import time
-import test
-from utils.processes_state_machine_track import finish_state_machine_track, init_state_machine_track_process
+import os
+from dotenv import load_dotenv
+
 
 workFlow = True
 
@@ -68,14 +71,15 @@ def flowInputScraper(options_scraper):
 if __name__ == '__main__':
     chrono = ChronoMeter()
     chrono.start_chrono()
-    print('V001::SUBITO.HOUSE-NETWORK     - STARTED')
+    logger = log.setup_logger()
+    load_dotenv()
+    VERSION = os.environ.get("VERSION")
+    logger.debug('V'+VERSION+'::SUBITO.HOUSE-NETWORK - STARTED')
 
     while workFlow:
         init_state_machine_track_process()
 
         try:
-            # console = input_console()
-            # TODO: Implement the logic for console input
 
             console = Console('2', True, False, False)
             if console.exit:
@@ -104,7 +108,7 @@ if __name__ == '__main__':
 
     # TODO: json not serializable when I update track_process
     # finish_state_machine_track(chrono.current_seconds_time, chrono.current_minutes_time)
-    print('V001::SUBITO.HOUSE-NETWORK - ENDED')
+    logger.debug('V'+VERSION+'::SUBITO.HOUSE-NETWORK - ENDED')
     chrono.stop_chrono()
     chrono.print_time()
     exit(1)

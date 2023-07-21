@@ -5,9 +5,9 @@
 from os import system
 import traceback
 import time
-import pyautogui as pg 
-from pyautogui import hotkey
-import pywhatkit as pwk
+# import pyautogui as pg 
+# from pyautogui import hotkey
+# import pywhatkit as pwk
 from datetime import datetime
 from service.request import req_api_house  as req
 import keyboard
@@ -20,9 +20,9 @@ from tests.messages.test_message import number_msg_and_cont_test
 
 
 def whatmsg(telef, msg):
-  pwk.sendwhatmsg_instantly(telef, msg)
+#   pwk.sendwhatmsg_instantly(telef, msg)
   time.sleep(2)
-  pg.click()
+#   pg.click()
   time.sleep(1)
 
 

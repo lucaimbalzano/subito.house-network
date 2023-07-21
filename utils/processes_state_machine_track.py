@@ -3,7 +3,7 @@
 # - @lucaimbalzano
 
 
-
+from logging import getLogger
 import datetime
 import service.request.req_api_time_manager as tmanager_requests
 import service.request.req_api_track as track_requests
@@ -14,6 +14,8 @@ from service.request.dto.machine_process_dto import MachineProcessRequestDTO as 
 from service.response.res_api_state import get_state_object_from_json
 from service.response.res_api_track import get_track_object_from_json
 
+
+logger = getLogger()
 
 #TIME_MANAGER
 def init_time_manager_default():
@@ -75,7 +77,7 @@ def init_state_machine_track_process():
     track_process.machine = id_last_machine
 
     track_requests.insert_track_process(track_process)
-    print('[DEBUG] TRACK PROCESS INITIALIZED - STATE MACHINE PROCESS INITIALIZED')
+    logger.debug('TRACK PROCESS INITIALIZED - STATE MACHINE PROCESS INITIALIZED')
 
 def finish_state_machine_track(seconds_exec, minutes_exec):
     id_last_track = track_requests.get_id_of_last_track_process()

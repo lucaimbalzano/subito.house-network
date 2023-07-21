@@ -29,10 +29,9 @@ def get_track_object_from_json(json_track_process):
         simpleNamespace_track_process.identifierProcess,
         simpleNamespace_track_process.numPage,
         simpleNamespace_track_process.numCard,
-        simpleNamespace_track_process.errorStack,
-        simpleNamespace_track_process.dateStarted,
-        simpleNamespace_track_process.dateFinished,
+        simpleNamespace_track_process.urlLastPage,
+        simpleNamespace_track_process.urlLastCard,
         simpleNamespace_track_process.options,
-        simpleNamespace_track_process.seconds_execution,
-        simpleNamespace_track_process.minutes_execution
+        simpleNamespace_track_process.errorStack,
+        simpleNamespace_track_process.machine
     ))

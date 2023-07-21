@@ -39,7 +39,7 @@ def insert_track_process(track_process):
     return response    
 
 def update_track_process(track_process):
-    uri = settings.BASE_URI + settings.PORT + settings.CRUD_TRACK + str(track_process.identifierProcess)
+    uri = settings.BASE_URI + settings.PORT + settings.CRUD_TRACK + str(track_process.idProcess)
     track_process_req = json.dumps(track_process.__dict__, indent=4)
     response = None
     try:

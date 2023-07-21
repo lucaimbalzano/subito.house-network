@@ -36,7 +36,11 @@ Linux add this dep called 'tkinter' to use Mouseinfo:
 sudo apt-get install python3-tk python3-dev
 ```
 
-
+Docker
+```
+docker build -t subito_docker .
+docker run --net=host subito_docker
+```
 
 ``` Dreams without Goals are just Dreams ```
 

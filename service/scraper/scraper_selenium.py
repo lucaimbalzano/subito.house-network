@@ -88,7 +88,7 @@ def scrollByPage(browser, num_pages_to_scroll, index_start_num_cards_to_scroll, 
             browser.execute_script("arguments[0].click();", privacy_alert)
 
     for index_page in range(1, num_pages_to_scroll):
-        print("[DEBUG] retrieving data from " + str(index_page) + " page =========================================================================")
+        logger.debug('retrieving data from ' + str(index_page) + ' page =========================================================================')
         req_api_track.update_page_by_track_process(last_track_process, str(index_page))
 
         houseList = []
@@ -104,7 +104,7 @@ def scrollByPage(browser, num_pages_to_scroll, index_start_num_cards_to_scroll, 
 
 def scrapingFromUrl(browser, index_page, index_start_num_cards, houseList, advertising_from_input):
     browser.get(getUrlHousesListPage(index_page, advertising_from_input))
-    print('[DEBUG] url page: '+str((getUrlHousesListPage(index_page, advertising_from_input))))
+    logger.debug('url page: '+str((getUrlHousesListPage(index_page, advertising_from_input))))
 
     all_links_cards = browser.find_elements(By.CLASS_NAME, "BigCard-module_link__kVqPE")
     if len(all_links_cards) == 0:
@@ -113,7 +113,7 @@ def scrapingFromUrl(browser, index_page, index_start_num_cards, houseList, adver
     try:
         global count_vetrina
         for index_cards in range(index_start_num_cards, len(all_links_cards)):
-            print("[DEBUG] retrieving data from card " + str(index_cards))
+            logger.debug("retrieving data from card " + str(index_cards))
             req_api_track.update_cards_by_track_process(last_track_process, str(index_cards), str(index_page))
         
             advertising_field = advertising_from_input
@@ -124,7 +124,7 @@ def scrapingFromUrl(browser, index_page, index_start_num_cards, houseList, adver
             # soup = BeautifulSoup(url_soap, 'html.parser')
             # print(soup.prettify)
 
-            print('[DEBUG] card url: '+ str(urlHouseDetail))
+            logger.debug('card url: '+ str(urlHouseDetail))
             if vetrina_field and count_vetrina <= 2:
                 count_vetrina += 1
                 scrapeHouseDetailFromNewTab(browser, urlHouseDetail, vetrina_field, advertising_field, houseList)    
@@ -142,7 +142,7 @@ def scrapingFromUrl(browser, index_page, index_start_num_cards, houseList, adver
 def getFeaturesHouse(browser,
                         location_scraped,
                         house_features,
-                        name_scraped,
+                        name_user_scraped,
                         price_scraped,
                         description_scraped,
                         title_scraped,
@@ -201,23 +201,33 @@ def getFeaturesHouse(browser,
     
         
 
-    return HouseRequestDTO(name_scraped, 
+    return HouseRequestDTO('',
+                        title_scraped,
+                        location_scraped,
+                        number_scraped, 
                         price_scraped, 
                         space_scraped, 
                         rooms_scraped, 
-                        floor_scraped, 
-                        description_scraped, 
-                        title_scraped, 
-                        url, 
-                        number_scraped, 
-                        vetrina_field, 
-                        advertising_field,
                         bathroom_scraped, 
+                        floor_scraped, 
+                        '',
+                        description_scraped, 
                         parking_scraped,
+                        advertising_field,
+                        'SALES',
                         energyClass_scraped,
                         energyHeating_scraped,
+                        energyHeating_scraped,
                         urlProfile_scraped_clean,
-                        location_scraped
+                        name_user_scraped, 
+                        'otherCharacteristics',
+                        'condominiumExpenses',
+                        'caution',
+                        'statusApartment',
+                        url, 
+                        'refDataAnnuncio',
+                        vetrina_field, 
+                        advertising_field
                     )
 
 
@@ -260,8 +270,7 @@ def getNumberOrContatta(browser):
             #     time.sleep(2)
             return 0
     except Exception as e:
-        print('[ERROR] Error occurred during scraping number: ' + str(e))
-        traceback.print_exc()
+        logger.error("Error occurred during scraping number: %s", str(e), exc_info=True)
         # req_api_track.update_errorStack_by_track_process(last_track_process, e)
         pass
 
@@ -275,7 +284,7 @@ def scrapeHouseDetailFromNewTab(browser, url, vetrina_field, advertising_field, 
 
     title_scraped = exception_NoSuchElementExeption_house_ByFieldFinder(browser, By.CLASS_NAME,SUBITO_TITLE_HOUSE_CLASS_NAME,1) if True else 'NOT SPECIFIED' 
     price_scraped = exception_NoSuchElementExeption_house_ByFieldFinder(browser, By.CLASS_NAME ,SUBITO_PRICE_HOUSE_CLASS_NAME,1) if True else 'NOT SPECIFIED'
-    name_scraped = exception_NoSuchElementExeption_house_ByFieldFinder(browser, By.CLASS_NAME ,SUBITO_NAME_USER_CLASS_NAME,1) if True else 'NOT SPECIFIED'
+    name_user_scraped = exception_NoSuchElementExeption_house_ByFieldFinder(browser, By.CLASS_NAME ,SUBITO_NAME_USER_CLASS_NAME,1) if True else 'NOT SPECIFIED'
     description_scraped = exception_NoSuchElementExeption_house_ByFieldFinder(browser, By.CLASS_NAME ,SUBITO_DESC_HOUSE_CLASS_NAME,1) if True else 'NOT SPECIFIED'
     location_scraped = exception_NoSuchElementExeption_house_ByFieldFinder(browser, By.CLASS_NAME ,SUBITO_LOCATION_DISPLAYED_HOUSE_CLASS_NAME,1)  if True else 'NOT SPECIFIED'
     # house_features = exception_NoSuchElementExeption_house_ByFieldFinder_asList(browser, By.CLASS_NAME ,SUBITO_FEATURES_HOUSE_CLASS_NAME,0)  if True else 'NOT SPECIFIED'
@@ -285,7 +294,7 @@ def scrapeHouseDetailFromNewTab(browser, url, vetrina_field, advertising_field, 
     house = getFeaturesHouse(browser,
                             location_scraped,
                             house_features,
-                            name_scraped,
+                            name_user_scraped,
                             price_scraped,
                             description_scraped,
                             title_scraped,

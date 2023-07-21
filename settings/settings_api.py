@@ -35,3 +35,5 @@ LAST_STATE = '/api/state/last'
 CRUD_TIME_MANAGER = '/api/timemanager/'
 LAST_TIME_MANAGER = '/api/timemanager/last'
 
+CRUD_FLOW_INPUT_SCRAPE_CONFIG = '/api/scraper/config/'
+
