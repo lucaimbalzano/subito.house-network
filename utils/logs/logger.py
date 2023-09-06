@@ -1,3 +1,8 @@
+# Dreams without Goals are just Dreams
+#
+# - @lucaimbalzano
+
+
 import logging
 from logging.handlers import TimedRotatingFileHandler
 from selenium.webdriver.remote.remote_connection import LOGGER as seleniumLogger

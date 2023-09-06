@@ -304,7 +304,7 @@ def scrapeHouseDetailFromNewTab(browser, url, vetrina_field, advertising_field, 
                             advertising_field)
 
     if house is not None:
-        house_service(house)
+        house_service.insert_house_handler(house)
         houseList.append(house)
 
     browser.close()

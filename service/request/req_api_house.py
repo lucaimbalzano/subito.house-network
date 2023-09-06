@@ -3,6 +3,7 @@
 # - @lucaimbalzano
 
 import json
+from logging import getLogger
 import traceback
 
 import requests
@@ -10,50 +11,34 @@ import settings.settings_api as settings
 from service.request.dto.house_request_dto import HouseRequestDTO, HouseRequestDTOEncoder
 import random
 
+logger = getLogger()
 
 def print_response(response,status_code, request_type, url_house, number):
-    print('[DEBUG] '+request_type+'::HTTP-RESPONSE: ')
-    print('STATUS CODE: '+status_code)
+    logger.debug('[DEBUG] '+request_type+'::HTTP-RESPONSE: ')
+    logger.debug('STATUS CODE: '+status_code)
     if number != 0:
-        print('NUMBER: '+number)
-    print('URL HOUSE: '+url_house)
-    # print('BODY REPOSNE: '+str(json.dumps(response,indent=4)))
+        logger.debug('NUMBER: '+number)
+    logger.debug('URL HOUSE: '+url_house)
+    # logger.debug('BODY REPOSNE: '+str(json.dumps(response,indent=4)))
     # TODO delete
-    print(' ')
+    logger.debug(' ')
 
 def print_responsetext(response,status_code, request_type):
-    print('[DEBUG] '+request_type+'::HTTP-RESPONSE: ')
-    print('STATUS CODE: '+status_code)
-    # print('BODY REPOSNE: '+json.dumps(response.text,indent=4))
+    logger.debug('[DEBUG] '+request_type+'::HTTP-RESPONSE: ')
+    logger.debug('STATUS CODE: '+status_code)
+    # logger.debug('BODY REPOSNE: '+json.dumps(response.text,indent=4))
     # TODO delete
-    print(' ')
+    logger.debug(' ')
 
 def insert_house_request(house_dto):
     uri = settings.BASE_URI + settings.PORT + settings.CRUD_HOUSE_REQ
-    house_req_dto = HouseRequestDTO(house_dto.name,
-                                    house_dto.price,
-                                    house_dto.space,
-                                    house_dto.rooms,
-                                    house_dto.floor,
-                                    house_dto.description,
-                                    house_dto.title,
-                                    house_dto.url,
-                                    house_dto.number,
-                                    house_dto.vetrina,
-                                    house_dto.advertising,
-                                    house_dto.bathrooms, 
-                                    house_dto.parking, 
-                                    house_dto.energyClass, 
-                                    house_dto.energyHeating, 
-                                    house_dto.urlUserProfile, 
-                                    house_dto.location)
     house_req_dto = json.dumps(house_req_dto.__dict__, indent=4)
     
     try:
         headers = {'Content-type': 'application/json'}
         response = requests.post(uri, data=house_req_dto,headers=headers)
     except Exception as e:
-        print('[STACKTRACE] POST::REQ_API_SUBITO_MESSAGE: ' + str(e))
+        logger.debug('[STACKTRACE] POST::REQ_API_SUBITO_MESSAGE: ' + str(e))
         pass
 
     print_response(response.json(), str(response.status_code), 'POST', house_dto.url, house_dto.number)
@@ -66,7 +51,7 @@ def get_api_subito(id_house):
         headers = {'Content-type': 'application/json'}
         response = requests.get(uri)
     except Exception as e:
-        print('[STACKTRACE] GET::REQ_API_SUBITO_MESSAGE: ' + str(e))
+        logger.debug('[STACKTRACE] GET::REQ_API_SUBITO_MESSAGE: ' + str(e))
     
     print_response(response.json(), str(response.status_code),'GET')
 
@@ -76,7 +61,7 @@ def get_api_subito_all_houses():
         headers = {'Content-type': 'application/json'}
         response = requests.get(uri)
     except Exception as e:
-        print('[STACKTRACE] GET::REQ_API_SUBITO_MESSAGE: ' + str(e))
+        logger.debug('[STACKTRACE] GET::REQ_API_SUBITO_MESSAGE: ' + str(e))
     
     print_response(response.json(), str(response.status_code),'GET')
     return response
@@ -89,7 +74,7 @@ def get_api_subito_check_number(number_house):
         headers = {'Content-type': 'application/json'}
         response = requests.get(uri)
     except Exception as e:
-        print('[STACKTRACE] GET::REQ_API_SUBITO_MESSAGE: ' + str(e))
+        logger.debug('[STACKTRACE] GET::REQ_API_SUBITO_MESSAGE: ' + str(e))
     if response.text == '':
         print_responsetext(response, '404','GET')
     else:
@@ -102,7 +87,7 @@ def get_api_subito_all_houses():
         headers = {'Content-type': 'application/json'}
         response = requests.get(uri)
     except Exception as e:
-        print('[STACKTRACE] GET::REQ_API_SUBITO_MESSAGE: ' + str(e))
+        logger.debug('[STACKTRACE] GET::REQ_API_SUBITO_MESSAGE: ' + str(e))
     
     print_response(response.json(), str(response.status_code),'GET')
     return response
@@ -115,7 +100,7 @@ def get_api_subito_check_number_adv(number_house, adv_house):
         headers = {'Content-type': 'application/json'}
         response = requests.get(uri)
     except Exception as e:
-        print('[STACKTRACE] GET::REQ_API_SUBITO_MESSAGE: ' + str(e))
+        logger.debug('[STACKTRACE] GET::REQ_API_SUBITO_MESSAGE: ' + str(e))
     if response.text == '':
         print_responsetext(response, '404','GET')
     else:
