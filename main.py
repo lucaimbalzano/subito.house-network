@@ -83,7 +83,7 @@ if __name__ == '__main__':
 
             console = Console('2', True, False, False)
             if console.exit:
-                print('Exit with success')
+                logger.debug('Exit with success')
                 pass
             else:
                 browser = Browser.get_browser()
@@ -93,17 +93,17 @@ if __name__ == '__main__':
                 houseListByPage = scrollByPage(browser, 50, 0, adv)
                 if houseListByPage is not None:
                     if console.excel:
-                        print('//TODO write on excel')
+                        logger.debug('//TODO write on excel')
                         # write on excel
                     if console.message:
                         send_message_whatsapp(houseListByPage)
                 else:
-                    print("[STACKTRACE] Error __main__:data_immobile_pages - is None")
+                    logger.error("[STACKTRACE] Error __main__:data_immobile_pages - is None")
                     quit()
 
         except Exception as e:
             traceback.print_exc()
-            print('[STACKTRACE] __main__:', str(e))
+            logger.error('[STACKTRACE] __main__:', str(e))
             pass
 
     # TODO: json not serializable when I update track_process

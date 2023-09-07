@@ -17,7 +17,7 @@ class HouseRequestDTO:
     self.rooms = rooms
     self.bathrooms = bathrooms
     self.floor = floor
-    self.totFloors = totFloors
+    self.totFloor = totFloors
     self.description = description
     self.parking = parking
     self.contract = contract
