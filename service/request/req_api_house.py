@@ -14,10 +14,10 @@ import random
 logger = getLogger()
 
 def print_response(response,status_code, request_type, url_house, number):
-    logger.debug(request_type+' - '+str(status_code))
     if number != 0:
         logger.debug(request_type+' - '+str(status_code)+', NUMBER: '+number+', URL HOUSE: '+url_house)
-    logger.debug(request_type+' - '+str(status_code)+', URL HOUSE: '+url_house)
+    else:
+        logger.debug(request_type+' - '+str(status_code)+', URL HOUSE: '+url_house)
 
 def print_responsetext(response,status_code, request_type):
     logger.debug(request_type+' - '+str(status_code))

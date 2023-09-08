@@ -21,3 +21,14 @@ SUBITO_FEATURES_HOUSE_ID_NAME = 'feature-section'
 SUBITO_NAME_USER_CLASS_NAME = 'index-module_name__hRS5a'
 SUBITO_USER_URL_PROFILE_CLASS_NAME = 'index-module_rounded_user_badge__KC3zi'
 
+    
+    
+    #XPATH
+SUBITO_PRICE_HOUSE_XPATH_MAX_WIDTH = '//span[contains(text(), "Oggi all")]/parent::div/parent::div/following-sibling::h1/following-sibling::div/following-sibling::p'
+SUBITO_PRICE_HOUSE_XPATH_MIN_WIDTH = '/html/body/div/div/main/div/div/div/div/span'
+SUBITO_TITLE_HOUSE_XPATH_FROM_ROOT_HTML = '/html/body/div/div/main/div/div/div/section/div/h1'
+SUBITO_LOCATION_HOUSE_XPATH_FROM_ROOT_HTML = '/html/body/div/div/main/div/div/div/section/div/div/span'
+SUBITO_NAME_USER_XPATH_FROM_ROOT_HTML = '/html/body/div/div/main/div/div/div/section/div/div/div/h6/a'
+SUBITO_DETTAGLI_HOUSE_XPATH = '//h3[contains(text(), "Dettagli")]/following-sibling::div'
+SUBITO_CARATTERISTICHE_HOUSE_XPATH = '//h2[contains(text(), "Caratteristiche")]/following-sibling::ul'
+SUBITO_RISCALDAMENTO_HOUSE_XPATH = '//h3[contains(text(), "Energia e riscaldamento")]/following-sibling::ul'

@@ -6,6 +6,8 @@ from asyncio.log import logger
 import sys
 import time
 from datetime import date, timedelta
+import datetime
+from pytz import timezone as pytz_timezone
 import traceback
 import random
 
@@ -15,9 +17,9 @@ import service.request.req_api_track as req_api_track
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from service.request.dto.house_request_dto import HouseRequestDTO
-from service.scraper.exceptions.nosuchelement_house_feature import exception_NoSuchElementExeption_house_ByFieldFinder, exception_NoSuchElementExeption_house_ByFieldFinder_asList, exception_NoSuchElementExeption_house_ByFieldFinder_byGetAttribute
+from service.scraper.exceptions.nosuchelement_house_feature import excepion_NoSuchElementException_caratteristiche_house, excepion_NoSuchElementException_dettagli_house, excepion_NoSuchElementException_riscaldamento_house, exception_NoSuchElementExeption_house_ByFieldFinder, exception_NoSuchElementExeption_house_ByFieldFinder_asList, exception_NoSuchElementExeption_house_ByFieldFinder_byGetAttribute, exception_NoSuchElementException_price_house_width_window_dispose_different_DOM
 from settings import settings, settings_message
-from settings.settings_subito_find_element import SUBITO_FEATURES_HOUSE_ID_NAME, SUBITO_PRICE_HOUSE_CLASS_NAME,SUBITO_NAME_USER_CLASS_NAME, SUBITO_DESC_HOUSE_CLASS_NAME, SUBITO_LOCATION_DISPLAYED_HOUSE_CLASS_NAME, SUBITO_FEATURES_HOUSE_CLASS_NAME,SUBITO_TITLE_HOUSE_CLASS_NAME, SUBITO_ENERGY_FEATURES_CLASS_NAME, SUBITO_USER_URL_PROFILE_CLASS_NAME
+from settings.settings_subito_find_element import SUBITO_CARATTERISTICHE_HOUSE_XPATH, SUBITO_DETTAGLI_HOUSE_XPATH, SUBITO_FEATURES_HOUSE_ID_NAME, SUBITO_PRICE_HOUSE_CLASS_NAME,SUBITO_NAME_USER_CLASS_NAME, SUBITO_DESC_HOUSE_CLASS_NAME, SUBITO_LOCATION_DISPLAYED_HOUSE_CLASS_NAME, SUBITO_FEATURES_HOUSE_CLASS_NAME, SUBITO_RISCALDAMENTO_HOUSE_XPATH,SUBITO_TITLE_HOUSE_CLASS_NAME, SUBITO_ENERGY_FEATURES_CLASS_NAME, SUBITO_USER_URL_PROFILE_CLASS_NAME,SUBITO_PRICE_HOUSE_XPATH_MIN_WIDTH, SUBITO_PRICE_HOUSE_XPATH_MAX_WIDTH, SUBITO_TITLE_HOUSE_XPATH_FROM_ROOT_HTML, SUBITO_LOCATION_HOUSE_XPATH_FROM_ROOT_HTML, SUBITO_NAME_USER_XPATH_FROM_ROOT_HTML
 from service import house_service
 
 linkForNewTab = ''
@@ -88,7 +90,7 @@ def scrollByPage(browser, num_pages_to_scroll, index_start_num_cards_to_scroll, 
         if privacy_alert != None:
             browser.execute_script("arguments[0].click();", privacy_alert)
 
-    for index_page in range(1, num_pages_to_scroll):
+    for index_page in range(2, num_pages_to_scroll):
         logger.debug('DATA SCROLL PAGE[' + str(index_page) + '] ==============')
         req_api_track.update_page_by_track_process(last_track_process, str(index_page))
 
@@ -139,35 +141,8 @@ def scrapingFromUrl(browser, index_page, index_start_num_cards, houseList, adver
     finally:
         return houseListByPage
 
-def check_caratteristiche_apartment(dati_principali_scraped, energia_riscaldamento_scraped, energyClass_scraped, energyHeating_scraped, status_house_scraped, space_scraped, floor_scraped, rooms_scraped, bathroom_scraped, parking_scraped):
-    
-    for index_field in range(0, len(dati_principali)):
-        field = dati_principali[index_field]
-        if dati_principali[index_field] == 'Stato':
-            status_house_scraped =  dati_principali[index_field+1] if dati_principali[index_field+1] != '-' else 'NOT SPECIFIED'
-        if dati_principali[index_field]  == 'Superficie':
-            space_scraped =  dati_principali[index_field+1] if dati_principali[index_field+1] != '-' else 'NOT SPECIFIED'
-        if dati_principali[index_field]  == 'Piano':
-            floor_scraped =  dati_principali[index_field+1] if dati_principali[index_field+1] != '-' else 'NOT SPECIFIED'
-        if dati_principali[index_field]  == 'Locali':
-            rooms_scraped =  dati_principali[index_field+1] if dati_principali[index_field+1] != '-' else 'NOT SPECIFIED'
-        if dati_principali[index_field]  == 'Bagni':
-            bathroom_scraped =  dati_principali[index_field+1] if dati_principali[index_field+1] != '-' else 'NOT SPECIFIED'
-        if dati_principali[index_field]  == 'Parcheggio':
-            parking_scraped =  dati_principali[index_field+1] if dati_principali[index_field+1] != '-' else 'NOT SPECIFIED'
-
-    for i in range(0, len(energia_riscaldamento_scraped)):
-        if energia_riscaldamento_scraped[i]  == 'Classe energetica':
-            energyClass_scraped = energia_riscaldamento_scraped[i+1] if energia_riscaldamento_scraped[i+1] != '-' else 'NOT SPECIFIED'
-        if energia_riscaldamento_scraped[i]  == 'Riscaldamento':
-            energyHeating_scraped = energia_riscaldamento_scraped[i+1] if energia_riscaldamento_scraped[i+1] != '-' else 'NOT SPECIFIED'
-
-
-    
-
 def getFeaturesHouse(browser,
                         location_scraped,
-                        house_features,
                         name_user_scraped,
                         price_scraped,
                         description_scraped,
@@ -179,7 +154,6 @@ def getFeaturesHouse(browser,
     
     energyHeating_scraped = 'NOT SPECIFIED'
     energyClass_scraped = 'NOT SPECIFIED'
-
     space_scraped = ''
     floor_scraped = ''
     rooms_scraped = ''
@@ -188,19 +162,43 @@ def getFeaturesHouse(browser,
     status_house_scraped = ''
 
     
-    title_scraped = browser.find_element(By.XPATH, '//span[contains(text(), "Oggi all")]/parent::div/parent::div/following-sibling::h1').text
-    location_scraped = browser.find_element(By.XPATH, '//span[contains(text(), "Oggi all")]/parent::div/parent::div/following-sibling::h1/following-sibling::div[//span]').text
-    price_scraped = browser.find_element(By.XPATH, '//span[contains(text(), "Oggi all")]/parent::div/parent::div/following-sibling::h1/following-sibling::div/following-sibling::p').text
-    name_user_scraped = browser.find_element(By.XPATH, '//span[contains(text(), "Oggi all")]/parent::div/parent::div/parent::div/following-sibling::div[//h6]').text.split('\n')[1]
+    title_scraped = browser.find_element(By.XPATH, SUBITO_TITLE_HOUSE_XPATH_FROM_ROOT_HTML).text
+    location_scraped = browser.find_elements(By.XPATH, SUBITO_LOCATION_HOUSE_XPATH_FROM_ROOT_HTML)[1].text
+    price_scraped = exception_NoSuchElementException_price_house_width_window_dispose_different_DOM(browser,By.XPATH, SUBITO_PRICE_HOUSE_XPATH_MIN_WIDTH, SUBITO_PRICE_HOUSE_XPATH_MAX_WIDTH)
+    name_user_scraped = browser.find_element(By.XPATH, SUBITO_NAME_USER_XPATH_FROM_ROOT_HTML).text
     url_profile_scraped = browser.find_element(By.XPATH, "/html/body/div/div/main/div/div/div/section/div/div/a").get_attribute('href')
     description_scraped = browser.find_element(By.XPATH, '//h2[contains(text(), "Descrizione")]/following-sibling::p').text
-    caratteristiche_scraped = browser.find_element(By.XPATH, '//h2[contains(text(), "Caratteristiche")]/following-sibling::ul').text.split('\n')
-    energia_riscaldamento_scraped = browser.find_element(By.XPATH, '//h3[contains(text(), "Energia e riscaldamento")]/following-sibling::ul').text.split('\n')
-    dettagli_scraped = browser.find_element(By.XPATH, '//h3[contains(text(), "Dettagli")]/following-sibling::div').text.split('\n')
-    dettagli_scraped = '; '.join(dettagli_scraped)
-    data_puplished_scraped = browser.find_element(By.XPATH, '/html/body/div/div/main/div/div/div/section/div/div/div/span').text
-    data_puplished_scraped = getDataPublishedClean(data_puplished_scraped)
-    check_caratteristiche_apartment(caratteristiche_scraped, energia_riscaldamento_scraped, energyClass_scraped, energyHeating_scraped, status_house_scraped, space_scraped, floor_scraped, rooms_scraped, bathroom_scraped, parking_scraped):
+    data_published_scraped = browser.find_element(By.XPATH, '/html/body/div/div/main/div/div/div/section/div/div/div/span').text
+    data_published_scraped = getDataPublishedClean(data_published_scraped)
+    dettagli_scraped = excepion_NoSuchElementException_dettagli_house(browser, By.XPATH, SUBITO_DETTAGLI_HOUSE_XPATH)
+    
+    caratteristiche_scraped = excepion_NoSuchElementException_caratteristiche_house(browser, By.XPATH, SUBITO_CARATTERISTICHE_HOUSE_XPATH)
+    for j in range(0, len(caratteristiche_scraped)):
+        if caratteristiche_scraped[j] == 'Stato':
+            status_house_scraped =  caratteristiche_scraped[j+1] if caratteristiche_scraped[j+1] != '-' else 'NOT SPECIFIED'
+        if caratteristiche_scraped[j]  == 'Superficie':
+            space_scraped =  caratteristiche_scraped[j+1] if caratteristiche_scraped[j+1] != '-' else 'NOT SPECIFIED'
+        if caratteristiche_scraped[j]  == 'Piano':
+            floor_scraped =  caratteristiche_scraped[j+1] if caratteristiche_scraped[j+1] != '-' else 'NOT SPECIFIED'
+        if caratteristiche_scraped[j]  == 'Locali':
+            rooms_scraped =  caratteristiche_scraped[j+1] if caratteristiche_scraped[j+1] != '-' else 'NOT SPECIFIED'
+        if caratteristiche_scraped[j]  == 'Bagni':
+            bathroom_scraped =  caratteristiche_scraped[j+1] if caratteristiche_scraped[j+1] != '-' else 'NOT SPECIFIED'
+        if caratteristiche_scraped[j]  == 'Parcheggio':
+            parking_scraped =  caratteristiche_scraped[j+1] if caratteristiche_scraped[j+1] != '-' else 'NOT SPECIFIED'
+
+    
+    energia_riscaldamento_scraped = excepion_NoSuchElementException_riscaldamento_house(browser, By.XPATH, SUBITO_RISCALDAMENTO_HOUSE_XPATH)
+    
+    if energia_riscaldamento_scraped != 'NOT SPECIFIED':
+        for i in range(0, len(energia_riscaldamento_scraped)):
+            if energia_riscaldamento_scraped[i]  == 'Classe energetica':
+                energyClass_scraped = energia_riscaldamento_scraped[i+1] if energia_riscaldamento_scraped[i+1] != '-' else 'NOT SPECIFIED'
+            if energia_riscaldamento_scraped[i]  == 'Riscaldamento':
+                energyHeating_scraped = energia_riscaldamento_scraped[i+1] if energia_riscaldamento_scraped[i+1] != '-' else 'NOT SPECIFIED'
+
+    dateAdded = str(date.today())
+    dateTimeAdded = str(datetime.datetime.now().astimezone(pytz_timezone('Europe/Rome')).time())
     
 
     return HouseRequestDTO('',
@@ -208,7 +206,7 @@ def getFeaturesHouse(browser,
                         location_scraped,
                         number_scraped, 
                         price_scraped, 
-                        space_scraped, 
+                        space_scraped,   
                         rooms_scraped, 
                         bathroom_scraped, 
                         floor_scraped, 
@@ -219,7 +217,7 @@ def getFeaturesHouse(browser,
                         'SALES',
                         energyClass_scraped,
                         energyHeating_scraped,
-                        energyHeating_scraped,
+                        'Nan',
                         url_profile_scraped,
                         name_user_scraped, 
                         dettagli_scraped,
@@ -227,9 +225,11 @@ def getFeaturesHouse(browser,
                         'NOT SPECIFIED',
                         status_house_scraped,
                         url, 
-                        'refDataAnnuncio',
+                        data_published_scraped,
                         vetrina_field, 
-                        advertising_field
+                        advertising_field,
+                        dateAdded,
+                        dateTimeAdded
                     )
 
 
@@ -284,19 +284,14 @@ def scrapeHouseDetailFromNewTab(browser, url, vetrina_field, advertising_field, 
     if number_scraped == 0 or number_scraped == None:
         number_scraped = '404-' + str(random.randrange(999, 999999))
 
-    title_scraped = exception_NoSuchElementExeption_house_ByFieldFinder(browser, By.CLASS_NAME,SUBITO_TITLE_HOUSE_CLASS_NAME,1) if True else 'NOT SPECIFIED' 
-    main_section_page = main_section_point_to_scrape_by_xpath(browser)
-    price_scraped = exception_NoSuchElementExeption_house_ByFieldFinder(browser, By.CLASS_NAME ,SUBITO_PRICE_HOUSE_CLASS_NAME,1) if True else 'NOT SPECIFIED'
-    name_user_scraped = exception_NoSuchElementExeption_house_ByFieldFinder(browser, By.CLASS_NAME ,SUBITO_NAME_USER_CLASS_NAME,1) if True else 'NOT SPECIFIED'
-    description_scraped = exception_NoSuchElementExeption_house_ByFieldFinder(browser, By.CLASS_NAME ,SUBITO_DESC_HOUSE_CLASS_NAME,1) if True else 'NOT SPECIFIED'
-    location_scraped = exception_NoSuchElementExeption_house_ByFieldFinder(browser, By.CLASS_NAME ,SUBITO_LOCATION_DISPLAYED_HOUSE_CLASS_NAME,1)  if True else 'NOT SPECIFIED'
-    # house_features = exception_NoSuchElementExeption_house_ByFieldFinder_asList(browser, By.CLASS_NAME ,SUBITO_FEATURES_HOUSE_CLASS_NAME,0)  if True else 'NOT SPECIFIED'
-    house_features = exception_NoSuchElementExeption_house_ByFieldFinder_asList(browser, By.ID ,SUBITO_FEATURES_HOUSE_ID_NAME,1).split('\n')
-    # if True else 'NOT SPECIFIED'
+    location_scraped = ''
+    name_user_scraped = ''
+    price_scraped = ''
+    description_scraped = ''
+    title_scraped = ''
 
     house = getFeaturesHouse(browser,
                             location_scraped,
-                            house_features,
                             name_user_scraped,
                             price_scraped,
                             description_scraped,
@@ -305,7 +300,6 @@ def scrapeHouseDetailFromNewTab(browser, url, vetrina_field, advertising_field, 
                             number_scraped,
                             vetrina_field,
                             advertising_field)
-
     if house is not None:
         house_service.insert_house_handler(house)
         houseList.append(house)
@@ -321,7 +315,7 @@ def getDataPublishedClean(data_published_scraped):
         data_published_scraped = str(current_date) + data_published_scraped[4:]
     if 'Ieri' in data_published_scraped:
         data_published_scraped = str((current_date - timedelta(1))) + data_published_scraped[4:]
-    else:
+    if not 'Oggi' and 'Ieri' in data_published_scraped:
         data_published_scraped = str(current_date.year)+', '+data_published_scraped
 
     return data_published_scraped    

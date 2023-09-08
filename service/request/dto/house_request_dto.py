@@ -7,7 +7,7 @@ from typing import Any
 
 
 class HouseRequestDTO:
-  def __init__(self,idHouse, title, location, number, price,space,rooms,bathrooms,floor,totFloors,description, parking, contract, typology, energyClass, energyHeating, energyUnit , urlUserProfile, nameUser, otherCharacteristics, condominiumExpenses, caution, statusApartment, url, refDataAnnuncio,  vetrina, advertising):
+  def __init__(self,idHouse, title, location, number, price,space,rooms,bathrooms,floor,totFloors,description, parking, contract, typology, energyClass, energyHeating, energyUnit , urlUserProfile, nameUser, otherCharacteristics, condominiumExpenses, caution, statusApartment, url, refDataAnnuncio,  vetrina, advertising, dateAdded, dateTimeAdded):
     self.idHouse = idHouse
     self.title = title
     self.location = location
@@ -35,7 +35,8 @@ class HouseRequestDTO:
     self.refDataAnnuncio = refDataAnnuncio
     self.vetrina = vetrina
     self.advertising = advertising
-    
+    self.dateAdded = dateAdded
+    self.dateTimeAdded = dateTimeAdded
     
 
   def __setattr__(self, idHouse: str, value: Any) -> None:
